@@ -1,0 +1,99 @@
+{% extends layout_template %}
+
+{% block title %}Fintech-IAM | Detail cycle{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Cycle detaille" title=cycle.code description="Consultez l'avancement du cycle, les depots associes et l'historique des mouvements relies." %}
+    <div class="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
+        <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+            <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Resume du cycle</h2>
+            <div class="mt-5 grid gap-5 sm:grid-cols-2">
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Client</p><p class="mt-2 text-base font-medium text-slate-900">{{ cycle.client.code }}</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Agent</p><p class="mt-2 text-base font-medium text-slate-900">{{ cycle.client.agent.code }}</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Mise</p><p class="mt-2 text-base font-medium text-slate-900">{{ cycle.mise }} FCFA</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Statut</p><p class="mt-2 text-base font-medium text-slate-900">{{ cycle.statut }}</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Collectes</p><p class="mt-2 text-base font-medium text-slate-900">{{ cycle.nb_collectes }}/31</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Total collecte courant</p><p class="mt-2 text-base font-medium text-slate-900">{{ total_collecte_courant }} FCFA</p></div>
+            </div>
+            <div class="mt-6">
+                <div class="mb-2 flex items-center justify-between text-sm text-slate-500">
+                    <span>Progression</span>
+                    <span>{{ progress_percent }}%</span>
+                </div>
+                <div class="h-3 w-full overflow-hidden rounded-full bg-slate-200">
+                    <div class="h-full rounded-full bg-gradient-to-r from-emerald-600 to-cyan-500" style="width: {{ progress_percent }}%;"></div>
+                </div>
+            </div>
+        </section>
+        <aside class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+            <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Actions</h2>
+            <div class="mt-5 space-y-3">
+                <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
+                    <div class="text-lg font-semibold text-slate-950">{{ progress_percent }}% de progression</div>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Le cycle avance vers le seuil de cloture a 31 collectes.</p>
+                </div>
+                {% if is_agent_space and cycle.statut == "EN_COURS" %}
+                    <a class="block rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-200 hover:bg-emerald-50/70" href="{% url 'agent_depot_create' cycle.id %}">
+                        <div class="text-base font-semibold text-slate-950">Enregistrer un depot</div>
+                        <p class="mt-1 text-sm leading-6 text-slate-600">Ajouter une ou plusieurs mises sur ce cycle en cours.</p>
+                    </a>
+                    <a class="block rounded-[1.25rem] border border-amber-200 bg-amber-50/90 px-4 py-4 transition hover:-translate-y-0.5 hover:border-amber-300 hover:bg-amber-100/80" href="{% url 'agent_emergency_withdrawal_create' cycle.id %}">
+                        <div class="text-base font-semibold text-amber-900">Declencher un retrait special</div>
+                        <p class="mt-1 text-sm leading-6 text-amber-800">Ferme le cycle par anticipation, applique une penalite d'une mise et partage cette penalite a 50/50.</p>
+                    </a>
+                {% elif cycle.statut == "CLOTURE_ANTICIPEE" %}
+                    <div class="rounded-[1.25rem] border border-amber-200 bg-amber-50/90 px-4 py-4">
+                        <div class="text-base font-semibold text-amber-900">Cycle cloture par anticipation</div>
+                        <p class="mt-1 text-sm leading-6 text-amber-800">Aucun depot supplementaire n'est possible. Le reliquat eventuel reste retirable depuis la fiche client.</p>
+                    </div>
+                {% endif %}
+            </div>
+        </aside>
+    </div>
+
+    <section class="mt-6 rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Depots enregistres</h2>
+        {% if depots %}
+            <div class="mt-5 overflow-x-auto rounded-[1.35rem] border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 text-left">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Code</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre de mises</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Montant</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white/90">
+                        {% for depot in depots %}
+                            <tr class="transition hover:bg-emerald-50/50">
+                                <td class="px-5 py-4 text-sm font-semibold text-slate-900">{{ depot.code }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ depot.nb_mises }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ depot.montant }} FCFA</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ depot.date_depot|date:"d/m/Y H:i" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucun depot" description="Les prochains versements enregistres sur ce cycle apparaitront ici." %}
+        {% endif %}
+    </section>
+
+    <section class="mt-6 rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Mouvements lies au cycle</h2>
+        {% if mouvements %}
+            <div class="mt-5 space-y-3">
+                {% for mouvement in mouvements %}
+                    <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
+                        <div class="text-base font-semibold text-slate-950">{{ mouvement.type }} • {{ mouvement.montant }} FCFA</div>
+                        <p class="mt-1 text-sm leading-6 text-slate-600">{{ mouvement.code }}{% if mouvement.reference_operation %} • Ref {{ mouvement.reference_operation }}{% endif %}</p>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucun mouvement" description="Les mouvements financiers relies a ce cycle apparaîtront ici." %}
+        {% endif %}
+    </section>
+{% endblock %}

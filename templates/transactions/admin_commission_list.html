@@ -1,0 +1,36 @@
+{% extends "layouts/admin_layout.html" %}
+
+{% block title %}Fintech-IAM | Commissions{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Reporting SQL" title="Commissions agents" description="Vue de synthese des commissions agent calculees depuis les mouvements COM_AGENT." %}
+    <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {% include "includes/stat_card.html" with label="Total commissions" value=total_commissions note="Somme de la vue SQL v_agent_commissions" %}
+    </section>
+    <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        {% if commission_rows %}
+            <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                <table class="w-full min-w-[720px] border-collapse">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Agent</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Nombre de commissions</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for row in commission_rows %}
+                            <tr class="border-t border-slate-200/70">
+                                <td class="px-4 py-4 text-slate-700">{{ row.agent_code }}</td>
+                                <td class="px-4 py-4 text-slate-700">{{ row.nb_commissions }}</td>
+                                <td class="px-4 py-4 font-medium text-slate-950">{{ row.total_commissions }} FCFA</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucune commission" description="Les clotures de cycles alimenteront cette page automatiquement." %}
+        {% endif %}
+    </section>
+{% endblock %}

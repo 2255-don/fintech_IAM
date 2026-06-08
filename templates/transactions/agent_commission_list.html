@@ -1,0 +1,38 @@
+{% extends "layouts/agent_layout.html" %}
+
+{% block title %}Fintech-IAM | Mes commissions{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Mes gains" title="Mes commissions" description="Consultez votre total de commissions et le disponible global de votre portefeuille depuis une page concise." %}
+    <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {% include "includes/stat_card.html" with label="Total commissions" value=total_commissions note="Calcule depuis la vue SQL v_agent_commissions" %}
+        {% include "includes/stat_card.html" with label="Disponible portefeuille" value=portfolio_retirable note="Somme des montants retirables de vos clients" %}
+        {% include "includes/stat_card.html" with label="Retraits saisis" value=total_retraits note="Historique total des retraits de votre perimetre" %}
+    </section>
+    <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        {% if commission_rows %}
+            <div class="overflow-x-auto rounded-[1.35rem] border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 text-left">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Agent</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Nombre de commissions</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Total</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white/90">
+                        {% for row in commission_rows %}
+                            <tr class="transition hover:bg-emerald-50/50">
+                                <td class="px-5 py-4 text-sm font-semibold text-slate-900">{{ row.agent_code }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ row.nb_commissions }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ row.total_commissions }} FCFA</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucune commission pour l'instant" description="Les clotures de cycles alimenteront automatiquement cette page." %}
+        {% endif %}
+    </section>
+{% endblock %}

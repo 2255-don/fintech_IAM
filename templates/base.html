@@ -1,0 +1,98 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Fintech-IAM{% endblock %}</title>
+    <link rel="stylesheet" href="{% static 'css/tailwind.css' %}">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    
+</head>
+<body class="min-h-screen bg-[radial-gradient(circle_at_top,_#e7f7ef,_#f8fafc_45%,_#eef7ff)] text-slate-900">
+    <header class="sticky top-0 z-40 border-b border-white/70 bg-white/78 backdrop-blur-xl">
+        <div class="mx-auto flex max-w-7xl flex-wrap items-center justify-between gap-4 px-6 py-4">
+            <a class="inline-flex items-center gap-3 text-slate-950" href="{% url 'home' %}">
+                <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-slate-950 to-emerald-700 text-sm font-semibold text-white shadow-[0_16px_32px_rgba(15,23,42,0.18)]">
+                    FI
+                </span>
+                <span>
+                    <span class="block text-lg font-semibold tracking-[-0.03em]">Fintech-IAM</span>
+                    <span class="block text-xs uppercase tracking-[0.22em] text-slate-400">Pilotage et execution</span>
+                </span>
+            </a>
+            <nav class="flex flex-wrap items-center justify-end gap-3 text-sm">
+                {% if request.user.is_authenticated %}
+                    <span class="inline-flex items-center gap-2 rounded-full border border-emerald-200 bg-emerald-50 px-4 py-2 font-medium text-emerald-800 shadow-sm">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                        {{ request.user.get_display_name }} - {{ request.user.role }}
+                    </span>
+                    <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-4 py-2 font-medium text-slate-700 shadow-sm transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'dashboard_redirect' %}">
+                        Tableau de bord
+                    </a>
+                    <form method="post" action="{% url 'logout' %}" class="inline">
+                        {% csrf_token %}
+                        <button
+                            type="submit"
+                            class="inline-flex items-center rounded-full bg-rose-600 px-4 py-2 font-medium text-white shadow-[0_14px_28px_rgba(225,29,72,0.22)] transition hover:bg-rose-700">
+                            Deconnexion
+                        </button>
+                    </form>
+                {% else %}
+                    <a class="inline-flex items-center rounded-full bg-slate-950 px-4 py-2 font-medium text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-slate-700" href="{% url 'login' %}">
+                        Connexion
+                    </a>
+                {% endif %}
+            </nav>
+        </div>
+    </header>
+    {% include "includes/toast_messages.html" %}
+    <main class="min-h-screen">
+        {% block content %}{% endblock %}
+    </main>
+    <script>
+        document.querySelectorAll("[data-toast]").forEach((toast) => {
+            const dismiss = () => {
+                toast.style.opacity = "0";
+                toast.style.transform = "translateY(-8px)";
+                toast.style.transition = "opacity 180ms ease, transform 180ms ease";
+                window.setTimeout(() => toast.remove(), 180);
+            };
+
+            const closeButton = toast.querySelector("[data-toast-close]");
+            if (closeButton) {
+                closeButton.addEventListener("click", dismiss);
+            }
+
+            window.setTimeout(dismiss, 4500);
+        });
+
+        document.querySelectorAll("form[data-confirm-title]").forEach((form) => {
+            form.addEventListener("submit", (event) => {
+                if (form.dataset.confirmed === "true") {
+                    return;
+                }
+
+                event.preventDefault();
+                Swal.fire({
+                    title: form.dataset.confirmTitle,
+                    text: form.dataset.confirmText || "",
+                    icon: form.dataset.confirmIcon || "question",
+                    showCancelButton: true,
+                    confirmButtonText: form.dataset.confirmConfirm || "Confirmer",
+                    cancelButtonText: "Annuler",
+                    reverseButtons: true,
+                    focusCancel: true,
+                    confirmButtonColor: "#0f766e",
+                    cancelButtonColor: "#94a3b8",
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.dataset.confirmed = "true";
+                        form.requestSubmit();
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

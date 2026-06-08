@@ -1,0 +1,10 @@
+.venv/
+__pycache__/
+*.py[cod]
+db.sqlite3
+fintech_iam.sqlite3
+.env
+node_modules/
+staticfiles/
+media/
+logs/*.log

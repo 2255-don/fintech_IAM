@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block title %}Fintech-IAM | Page introuvable{% endblock %}
+
+{% block content %}
+    {% include "includes/error_state.html" with code="Erreur 404" title="Page introuvable" description="La ressource demandee est introuvable. Utilisez la navigation principale pour revenir vers une page metier valide." %}
+{% endblock %}

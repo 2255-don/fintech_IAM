@@ -1,0 +1,28 @@
+{% extends "layouts/agent_layout.html" %}
+
+{% block title %}Fintech-IAM | Nouveau client{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Creation client" title="Ajouter un client" description="Renseignez une fiche claire et legere pour alimenter votre portefeuille terrain." %}
+    <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        <form method="post" class="grid gap-5" data-confirm-title="Creer ce client ?" data-confirm-text="La fiche client sera ajoutee a votre portefeuille et deviendra disponible pour l'ouverture d'un cycle." data-confirm-confirm="Creer le client" data-confirm-icon="question">
+            {% csrf_token %}
+            {% if form.non_field_errors %}
+                <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
+            {% endif %}
+            {% for field in form %}
+                <div class="grid gap-2">
+                    <label class="text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                    {{ field }}
+                    {% if field.errors %}
+                        <div class="text-sm text-rose-700">{{ field.errors }}</div>
+                    {% endif %}
+                </div>
+            {% endfor %}
+            <div class="flex flex-wrap gap-3 pt-2">
+                <button class="inline-flex items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700" type="submit">Creer le client</button>
+                <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'agent_client_list' %}">Retour</a>
+            </div>
+        </form>
+    </section>
+{% endblock %}

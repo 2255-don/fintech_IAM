@@ -1,0 +1,37 @@
+{% extends "layouts/admin_layout.html" %}
+
+{% block title %}Fintech-IAM | Clients{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Portefeuille global" title="Clients" description="Consultez les clients, leur agent responsable et l'activite de leurs cycles depuis un tableau de lecture simple." %}
+    <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        {% if clients %}
+            <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                <table class="w-full min-w-[760px] border-collapse">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Code</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Client</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Agent</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Telephone</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Cycles</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for client in clients %}
+                            <tr class="border-t border-slate-200/70">
+                                <td class="px-4 py-4"><a class="font-medium text-slate-950 hover:text-emerald-700" href="{% url 'admin_client_detail' client.id %}">{{ client.code }}</a></td>
+                                <td class="px-4 py-4 text-slate-700">{{ client.nom }} {{ client.prenom }}</td>
+                                <td class="px-4 py-4 text-slate-600">{{ client.agent.code }}</td>
+                                <td class="px-4 py-4 text-slate-600">{{ client.telephone }}</td>
+                                <td class="px-4 py-4 text-slate-600">{{ client.cycle_count }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucun client enregistre" description="Le portefeuille global apparaitra ici des la creation des premieres fiches clientes." %}
+        {% endif %}
+    </section>
+{% endblock %}

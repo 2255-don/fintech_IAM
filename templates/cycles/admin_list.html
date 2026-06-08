@@ -1,0 +1,39 @@
+{% extends "layouts/admin_layout.html" %}
+
+{% block title %}Fintech-IAM | Cycles{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Cycles d'epargne" title="Cycles" description="Consultez les cycles ouverts ou clotures, leur progression et les montants en jeu dans un tableau dedie." %}
+    <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        {% if cycles %}
+            <div class="overflow-x-auto rounded-[1.35rem] border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 text-left">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Code</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Client</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Agent</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Mise</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Collectes</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Statut</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white/90">
+                        {% for cycle in cycles %}
+                            <tr class="transition hover:bg-emerald-50/50">
+                                <td class="px-5 py-4 text-sm font-semibold text-slate-900"><a class="transition hover:text-emerald-700" href="{% url 'admin_cycle_detail' cycle.id %}">{{ cycle.code }}</a></td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ cycle.client.code }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ cycle.client.agent.code }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ cycle.mise }} FCFA</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ cycle.nb_collectes }}/31</td>
+                                <td class="px-5 py-4 text-sm text-slate-700"><span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if cycle.statut == 'EN_COURS' %}bg-emerald-50 text-emerald-700{% else %}bg-slate-100 text-slate-700{% endif %}">{{ cycle.statut }}</span></td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucun cycle" description="Les cycles apparaîtront ici des qu'ils seront ouverts pour les clients." %}
+        {% endif %}
+    </section>
+{% endblock %}

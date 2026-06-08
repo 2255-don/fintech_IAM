@@ -1,0 +1,103 @@
+{% extends "layouts/admin_layout.html" %}
+
+{% block title %}Fintech-IAM | Dashboard Admin{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Pilotage global" title="Tableau de bord administrateur" description="Suivez les volumes clefs, les disponibilites clients et les derniers mouvements depuis un espace de supervision oriente decision." %}
+
+    <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {% include "includes/stat_card.html" with label="Agents actifs" value=agent_count note="Base operationnelle disponible" %}
+        {% include "includes/stat_card.html" with label="Clients" value=client_count note="Portefeuille global suivi" %}
+        {% include "includes/stat_card.html" with label="Cycles en cours" value=cycles_in_progress note="Cycles encore alimentables" %}
+        {% include "includes/stat_card.html" with label="Cycles clotures" value=cycles_closed note="Cycles finalises et credites" %}
+    </section>
+
+    <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
+        {% include "includes/stat_card.html" with label="Total commissions agent" value=total_commissions note="Synthese issue de la vue SQL" %}
+        {% include "includes/stat_card.html" with label="Total retraits" value=total_retraits note="Historique global des sorties client" %}
+    </section>
+
+    <div class="grid gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,0.9fr)]">
+        <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+            <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Clients avec disponible retirable</h2>
+            {% if top_clients %}
+                <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                    <table class="w-full min-w-[720px] border-collapse">
+                        <thead class="bg-slate-50/90">
+                            <tr>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Client</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Code</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Credit</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Retraits</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Disponible</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for row in top_clients %}
+                                <tr class="border-t border-slate-200/70">
+                                    <td class="px-4 py-4"><a class="font-medium text-slate-950 hover:text-emerald-700" href="{% url 'admin_client_detail' row.client_id %}">{{ row.client_nom_complet }}</a></td>
+                                    <td class="px-4 py-4 text-slate-600">{{ row.client_code }}</td>
+                                    <td class="px-4 py-4 text-slate-600">{{ row.total_credit_client }} FCFA</td>
+                                    <td class="px-4 py-4 text-slate-600">{{ row.total_retraits }} FCFA</td>
+                                    <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">{{ row.montant_retirable }} FCFA</span></td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                {% include "includes/empty_state.html" with title="Aucun disponible calcule" description="Les vues de reporting sont pretes, mais aucun mouvement de credit client n'a encore ete enregistre." %}
+            {% endif %}
+        </section>
+
+        <aside class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+            <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Acces rapides</h2>
+            <div class="grid gap-3">
+                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-emerald-300 hover:bg-white" href="{% url 'admin_agent_list' %}">
+                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Gerer les agents</div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Consulter la structure terrain et ouvrir un nouveau profil agent.</p>
+                </a>
+                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-emerald-300 hover:bg-white" href="{% url 'admin_client_list' %}">
+                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Superviser les clients</div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Verifier les details clients, leurs cycles et leur disponible retirable.</p>
+                </a>
+                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-emerald-300 hover:bg-white" href="{% url 'admin_mouvement_list' %}">
+                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Historique financier</div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Auditer les mouvements, depots, retraits et ecritures de cloture.</p>
+                </a>
+            </div>
+        </aside>
+    </div>
+
+    <section class="mt-4 rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Derniers mouvements</h2>
+        {% if recent_mouvements %}
+            <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                <table class="w-full min-w-[720px] border-collapse">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Code</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Type</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Client</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Cycle</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Montant</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for mouvement in recent_mouvements %}
+                            <tr class="border-t border-slate-200/70">
+                                <td class="px-4 py-4 text-slate-700">{{ mouvement.code }}</td>
+                                <td class="px-4 py-4 text-slate-700">{{ mouvement.type }}</td>
+                                <td class="px-4 py-4 text-slate-700">{{ mouvement.client.code }}</td>
+                                <td class="px-4 py-4 text-slate-700">{% if mouvement.cycle %}{{ mouvement.cycle.code }}{% else %}-{% endif %}</td>
+                                <td class="px-4 py-4 font-medium text-slate-950">{{ mouvement.montant }} FCFA</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucun mouvement recent" description="Les prochains depots, retraits ou clotures apparaitront ici." %}
+        {% endif %}
+    </section>
+{% endblock %}

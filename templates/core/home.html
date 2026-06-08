@@ -1,0 +1,261 @@
+{% extends "base.html" %}
+
+{% block title %}Fintech-IAM | Accueil{% endblock %}
+
+{% block content %}
+<section class="relative left-1/2 right-1/2 w-screen -translate-x-1/2 overflow-hidden">
+    <div class="relative overflow-hidden bg-[radial-gradient(circle_at_top_left,_rgba(255,255,255,0.92),_rgba(244,251,247,0.92)_35%,_rgba(237,245,251,0.96)_100%)]">
+        <div class="pointer-events-none absolute left-[-8rem] top-12 h-[22rem] w-[22rem] rounded-full bg-emerald-300/20 blur-3xl"></div>
+        <div class="pointer-events-none absolute right-[-7rem] top-32 h-[26rem] w-[26rem] rounded-full bg-cyan-300/15 blur-3xl"></div>
+
+        <div class="mx-auto max-w-7xl px-6 pb-16 pt-8 sm:px-8 lg:px-12 lg:pb-24">
+            <div class="grid min-h-[calc(100vh-5rem)] items-center gap-8 md:grid-cols-[1.05fr_0.95fr] lg:gap-10">
+                <div class="relative z-10 max-w-3xl">
+                    <div class="inline-flex items-center gap-3 rounded-full border border-emerald-200/80 bg-white/85 px-4 py-2 text-sm font-medium text-slate-700 shadow-sm backdrop-blur">
+                        <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                        Plateforme de gestion terrain et pilotage financier
+                    </div>
+
+                    <div class="mt-8 space-y-6">
+                        <h1 class="max-w-3xl text-5xl font-semibold tracking-[-0.07em] text-slate-950 sm:text-6xl lg:text-7xl">
+                            Pilotez agents, clients, depots et retraits dans un seul espace clair.
+                        </h1>
+                        <p class="max-w-2xl text-lg leading-8 text-slate-600 sm:text-xl">
+                            Fintech-IAM aide l'administration a suivre l'activite et donne aux agents un espace simple pour executer leurs operations sans lourdeur.
+                        </p>
+                    </div>
+
+                    <div class="mt-9 flex flex-wrap gap-4">
+                        <a class="inline-flex items-center rounded-full bg-slate-950 px-7 py-3.5 text-base font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700" href="{% url 'login' %}">
+                            Se connecter
+                        </a>
+                        <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-7 py-3.5 text-base font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="#espaces">
+                            Voir les espaces
+                        </a>
+                    </div>
+
+                    <div class="mt-10 grid gap-4 sm:grid-cols-3">
+                        <article class="rounded-[1.7rem] border border-white/80 bg-white/82 p-5 shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur transition hover:-translate-y-1">
+                            <p class="text-sm uppercase tracking-[0.18em] text-slate-400">Suivi</p>
+                            <p class="mt-3 text-xl font-semibold tracking-[-0.03em] text-slate-950">Cycles et collecte</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Vision rapide de l'activite en cours.</p>
+                        </article>
+                        <article class="rounded-[1.7rem] border border-white/80 bg-white/82 p-5 shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur transition hover:-translate-y-1">
+                            <p class="text-sm uppercase tracking-[0.18em] text-slate-400">Controle</p>
+                            <p class="mt-3 text-xl font-semibold tracking-[-0.03em] text-slate-950">Depots et retraits</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Actions encadrees avec retours clairs.</p>
+                        </article>
+                        <article class="rounded-[1.7rem] border border-white/80 bg-white/82 p-5 shadow-[0_25px_60px_rgba(15,23,42,0.08)] backdrop-blur transition hover:-translate-y-1">
+                            <p class="text-sm uppercase tracking-[0.18em] text-slate-400">Pilotage</p>
+                            <p class="mt-3 text-xl font-semibold tracking-[-0.03em] text-slate-950">Admin et agent separes</p>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Chaque role travaille dans son vrai contexte.</p>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="relative z-10 py-6 md:py-0">
+                    <div class="relative overflow-hidden rounded-[2.3rem] border border-slate-200/80 bg-slate-950 p-5 text-white shadow-[0_35px_90px_rgba(15,23,42,0.22)] sm:p-6">
+                        <div class="absolute inset-0 bg-[radial-gradient(circle_at_top_right,_rgba(16,185,129,0.22),_transparent_34%),radial-gradient(circle_at_bottom_left,_rgba(56,189,248,0.18),_transparent_32%)]"></div>
+                        <div class="relative">
+                            <div class="flex items-center justify-between gap-4 border-b border-white/10 pb-4">
+                                <div>
+                                    <p class="text-xs uppercase tracking-[0.26em] text-emerald-300">Tableaux de bord</p>
+                                    <h2 class="mt-2 text-2xl font-semibold tracking-[-0.04em]">Admin et agent bien cadrees</h2>
+                                </div>
+                                <span class="rounded-full border border-white/10 bg-white/10 px-3 py-1 text-sm text-slate-200">Temps reel</span>
+                            </div>
+
+                            <div class="mt-5 grid gap-4 sm:grid-cols-2">
+                                <div class="rounded-[1.5rem] border border-emerald-400/20 bg-white/5 p-4">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <p class="text-sm text-slate-400">Vue admin</p>
+                                        <span class="rounded-full bg-emerald-400/10 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-emerald-300">Pilotage</span>
+                                    </div>
+                                    <p class="mt-3 text-3xl font-semibold tracking-[-0.05em]">214</p>
+                                    <p class="mt-2 text-sm text-emerald-300">clients suivis et 8 cycles ouverts</p>
+                                </div>
+                                <div class="rounded-[1.5rem] border border-cyan-400/20 bg-white/5 p-4">
+                                    <div class="flex items-center justify-between gap-3">
+                                        <p class="text-sm text-slate-400">Vue agent</p>
+                                        <span class="rounded-full bg-cyan-400/10 px-2.5 py-1 text-[0.7rem] font-semibold uppercase tracking-[0.16em] text-cyan-300">Terrain</span>
+                                    </div>
+                                    <p class="mt-3 text-3xl font-semibold tracking-[-0.05em]">31</p>
+                                    <p class="mt-2 text-sm text-cyan-300">collectes traitees et operations du jour</p>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 rounded-[1.7rem] border border-white/10 bg-white/5 p-5">
+                                <div class="flex items-center justify-between gap-4">
+                                    <div>
+                                        <p class="text-sm text-slate-400">Ce que l'admin surveille</p>
+                                        <p class="mt-2 text-xl font-semibold">Disponible client, retraits et mouvements</p>
+                                    </div>
+                                    <span class="h-3 w-3 rounded-full bg-emerald-400 shadow-[0_0_20px_rgba(52,211,153,0.85)]"></span>
+                                </div>
+
+                                <div class="mt-5 space-y-3">
+                                    <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Client avec disponible retirable</p>
+                                            <p class="text-xs text-slate-400">vue portefeuille et historique credit</p>
+                                        </div>
+                                        <span class="text-sm font-semibold text-emerald-300">145 000</span>
+                                    </div>
+                                    <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Retraits valides</p>
+                                            <p class="text-xs text-slate-400">controle rapide et historique disponible</p>
+                                        </div>
+                                        <span class="text-sm font-semibold text-cyan-300">37</span>
+                                    </div>
+                                    <div class="flex items-center justify-between rounded-2xl bg-white/5 px-4 py-3">
+                                        <div>
+                                            <p class="text-sm font-medium text-white">Commissions agent</p>
+                                            <p class="text-xs text-slate-400">synthese issue des mouvements de cloture</p>
+                                        </div>
+                                        <span class="text-sm font-semibold text-amber-300">OK</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="mt-4 grid gap-4 sm:grid-cols-[0.9fr_1.1fr]">
+                                <div class="rounded-[1.5rem] border border-white/10 bg-white/5 p-4">
+                                    <p class="text-sm text-slate-400">Cote agent</p>
+                                    <p class="mt-2 text-lg font-semibold">Actions rapides terrain</p>
+                                    <div class="mt-4 space-y-2.5 text-sm text-slate-300">
+                                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+                                            <span>Ajouter un client</span>
+                                            <span class="text-cyan-300">Direct</span>
+                                        </div>
+                                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+                                            <span>Suivre mes cycles</span>
+                                            <span class="text-emerald-300">Actif</span>
+                                        </div>
+                                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+                                            <span>Verifier mes commissions</span>
+                                            <span class="text-amber-300">Calcule</span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="rounded-[1.5rem] border border-white/10 bg-gradient-to-r from-white/10 to-white/5 p-4">
+                                    <p class="text-sm text-slate-400">Connexion rapide</p>
+                                    <p class="mt-2 text-lg font-semibold">Choisissez votre role et ouvrez votre espace</p>
+                                    <div class="mt-4 grid gap-2 text-sm text-slate-200">
+                                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+                                            <span>Administrateur</span>
+                                            <span class="text-emerald-300">supervision</span>
+                                        </div>
+                                        <div class="flex items-center justify-between rounded-xl bg-white/5 px-3 py-2">
+                                            <span>Agent</span>
+                                            <span class="text-cyan-300">execution</span>
+                                        </div>
+                                    </div>
+                                    <a class="mt-4 inline-flex items-center rounded-full bg-white px-4 py-2 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]" href="{% url 'login' %}">
+                                        Ouvrir la connexion
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="border-y border-white/70 bg-white/55 backdrop-blur">
+            <div class="mx-auto grid max-w-7xl gap-4 px-6 py-6 sm:grid-cols-2 sm:px-8 lg:grid-cols-4 lg:px-12">
+                <div class="rounded-[1.5rem] border border-white/70 bg-white/72 px-5 py-4 shadow-sm">
+                    <p class="text-sm text-slate-400">Clients</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-950">Fiches claires et historiques utiles</p>
+                </div>
+                <div class="rounded-[1.5rem] border border-white/70 bg-white/72 px-5 py-4 shadow-sm">
+                    <p class="text-sm text-slate-400">Agents</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-950">Encadrement et suivi par role</p>
+                </div>
+                <div class="rounded-[1.5rem] border border-white/70 bg-white/72 px-5 py-4 shadow-sm">
+                    <p class="text-sm text-slate-400">Operations</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-950">Depots, retraits et clotures</p>
+                </div>
+                <div class="rounded-[1.5rem] border border-white/70 bg-white/72 px-5 py-4 shadow-sm">
+                    <p class="text-sm text-slate-400">Supervision</p>
+                    <p class="mt-1 text-lg font-semibold text-slate-950">Reporting lisible et logs exploitables</p>
+                </div>
+            </div>
+        </div>
+
+        <div id="espaces" class="mx-auto max-w-7xl px-6 py-16 sm:px-8 lg:px-12 lg:py-24">
+            <div class="grid gap-6 lg:grid-cols-[0.82fr_1.18fr] lg:items-start">
+                <div class="max-w-2xl">
+                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-700">Deux espaces, deux rythmes</p>
+                    <h2 class="mt-4 text-4xl font-semibold tracking-[-0.05em] text-slate-950 sm:text-5xl">
+                        Une interface admin pour piloter, une interface agent pour agir vite.
+                    </h2>
+                    <p class="mt-5 text-lg leading-8 text-slate-600">
+                        Le projet n'a pas vocation a tout melanger. Chaque espace a ses pages, ses actions et son niveau de lecture pour rester simple, rapide et propre.
+                    </p>
+                </div>
+
+                <div class="grid gap-5 md:grid-cols-2">
+                    <article class="rounded-[2rem] border border-slate-200/80 bg-white/88 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+                        <div class="flex items-center justify-between gap-4">
+                            <h3 class="text-2xl font-semibold tracking-[-0.03em] text-slate-950">Espace admin</h3>
+                            <span class="rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-emerald-700">Pilotage</span>
+                        </div>
+                        <div class="mt-6 space-y-4 text-slate-600">
+                            <p>Gestion des agents, des clients, des cycles et des parametres de fonctionnement.</p>
+                            <p>Suivi global des depots, retraits, commissions, journaux et indicateurs utiles.</p>
+                            <p>Validation, controle et vue d'ensemble sans surcharge visuelle.</p>
+                        </div>
+                    </article>
+
+                    <article class="rounded-[2rem] border border-slate-200/80 bg-slate-950 p-6 text-white shadow-[0_24px_60px_rgba(15,23,42,0.12)]">
+                        <div class="flex items-center justify-between gap-4">
+                            <h3 class="text-2xl font-semibold tracking-[-0.03em]">Espace agent</h3>
+                            <span class="rounded-full bg-white/10 px-3 py-1 text-xs font-semibold uppercase tracking-[0.18em] text-cyan-200">Terrain</span>
+                        </div>
+                        <div class="mt-6 space-y-4 text-slate-300">
+                            <p>Parcours court pour enregistrer les operations du quotidien sans friction inutile.</p>
+                            <p>Lecture immediate des clients, cycles actifs et historiques personnels.</p>
+                            <p>Navigation plus legere, bien decoupee, facile a prendre en main.</p>
+                        </div>
+                    </article>
+                </div>
+            </div>
+        </div>
+
+        <div class="mx-auto max-w-7xl px-6 pb-16 sm:px-8 lg:px-12 lg:pb-24">
+            <div class="grid gap-5 lg:grid-cols-3">
+                <article class="rounded-[2rem] border border-white/80 bg-white/85 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Clarte</p>
+                    <h3 class="mt-4 text-2xl font-semibold tracking-[-0.03em] text-slate-950">Pages plus legeres</h3>
+                    <p class="mt-4 leading-7 text-slate-600">Un decoupage par fonctionnalite pour eviter les ecrans confus et garder des actions evidentes.</p>
+                </article>
+                <article class="rounded-[2rem] border border-white/80 bg-white/85 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Fiabilite</p>
+                    <h3 class="mt-4 text-2xl font-semibold tracking-[-0.03em] text-slate-950">Traceabilite utile</h3>
+                    <p class="mt-4 leading-7 text-slate-600">Messages de retour, confirmations d'action, journalisation et gestion d'erreur orientee exploitation.</p>
+                </article>
+                <article class="rounded-[2rem] border border-white/80 bg-white/85 p-6 shadow-[0_24px_60px_rgba(15,23,42,0.08)] backdrop-blur">
+                    <p class="text-sm font-semibold uppercase tracking-[0.2em] text-slate-400">Experience</p>
+                    <h3 class="mt-4 text-2xl font-semibold tracking-[-0.03em] text-slate-950">Moderne et fluide</h3>
+                    <p class="mt-4 leading-7 text-slate-600">Une presentation sobre, quelques animations utiles et une navigation qui reste directe.</p>
+                </article>
+            </div>
+        </div>
+
+        <div class="border-t border-white/70 bg-slate-950">
+            <div class="mx-auto grid max-w-7xl gap-8 px-6 py-14 text-white sm:px-8 lg:grid-cols-[1.1fr_0.9fr] lg:px-12">
+                <div>
+                    <p class="text-sm font-semibold uppercase tracking-[0.22em] text-emerald-300">Fintech-IAM</p>
+                    <h2 class="mt-4 max-w-2xl text-3xl font-semibold tracking-[-0.04em] sm:text-4xl">Un point d'entree simple pour une gestion plus propre des operations fintech.</h2>
+                </div>
+                <div class="flex flex-col justify-center gap-4 lg:items-end">
+                    <p class="max-w-xl text-base leading-7 text-slate-300 lg:text-right">Connectez-vous pour acceder a votre espace et commencer le suivi des activites, des cycles et des operations.</p>
+                    <a class="inline-flex items-center justify-center rounded-full bg-white px-6 py-3 text-sm font-semibold text-slate-950 transition hover:scale-[1.02]" href="{% url 'login' %}">
+                        Aller a la connexion
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

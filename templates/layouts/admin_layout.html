@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="w-full px-4 py-6 sm:px-6 lg:px-8">
+    <div class="grid gap-6 lg:grid-cols-[300px_minmax(0,1fr)] lg:items-start">
+        <aside class="rounded-[1.75rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur lg:sticky lg:top-24 lg:max-h-[calc(100vh-7rem)] lg:overflow-y-auto">
+            <div class="inline-flex items-center gap-2 rounded-full bg-emerald-50 px-4 py-2 text-sm font-semibold text-emerald-800">
+                <span class="h-2.5 w-2.5 rounded-full bg-emerald-500"></span>
+                Espace admin
+            </div>
+            <div class="mt-4">
+                <h1 class="text-[2rem] font-semibold leading-tight tracking-[-0.04em] text-slate-950">Supervision Fintech-IAM</h1>
+                <p class="mt-3 text-base leading-8 text-slate-600">Pilotez les agents, le portefeuille client, les cycles et les mouvements depuis un espace clair et segmente.</p>
+            </div>
+            <div class="mt-8">
+                <p class="mb-3 text-[0.72rem] uppercase tracking-[0.18em] text-slate-400">Pilotage</p>
+                <div class="grid gap-2">
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_dashboard' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_dashboard' %}">Dashboard</a>
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_commission_list' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_commission_list' %}">Commissions</a>
+                </div>
+            </div>
+            <div class="mt-8">
+                <p class="mb-3 text-[0.72rem] uppercase tracking-[0.18em] text-slate-400">Referentiels</p>
+                <div class="grid gap-2">
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_agent_list' or request.resolver_match.url_name == 'admin_agent_detail' or request.resolver_match.url_name == 'admin_agent_create' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_agent_list' %}">Agents</a>
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_client_list' or request.resolver_match.url_name == 'admin_client_detail' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_client_list' %}">Clients</a>
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_cycle_list' or request.resolver_match.url_name == 'admin_cycle_detail' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_cycle_list' %}">Cycles</a>
+                </div>
+            </div>
+            <div class="mt-8">
+                <p class="mb-3 text-[0.72rem] uppercase tracking-[0.18em] text-slate-400">Flux financiers</p>
+                <div class="grid gap-2">
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_depot_list' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_depot_list' %}">Depots</a>
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_retrait_list' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_retrait_list' %}">Retraits</a>
+                    <a class="rounded-2xl px-4 py-3 text-sm font-medium transition {% if request.resolver_match.url_name == 'admin_mouvement_list' %}bg-[linear-gradient(135deg,rgba(15,118,110,0.12),rgba(15,23,42,0.08))] text-slate-950{% else %}text-slate-600 hover:bg-slate-50 hover:text-slate-950{% endif %}" href="{% url 'admin_mouvement_list' %}">Mouvements</a>
+                </div>
+            </div>
+        </aside>
+        <div class="min-h-[calc(100vh-7rem)] rounded-[2rem] border border-white/70 bg-white/90 p-7 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+            {% block workspace %}{% endblock %}
+        </div>
+    </div>
+</section>
+{% endblock %}

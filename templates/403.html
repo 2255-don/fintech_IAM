@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+
+{% block title %}Fintech-IAM | Acces refuse{% endblock %}
+
+{% block content %}
+    {% include "includes/error_state.html" with code="Erreur 403" title="Acces refuse" description="Vous n'etes pas autorise a acceder a cette ressource. Si cela semble anormal, verifiez votre role ou consultez les journaux applicatifs." %}
+{% endblock %}

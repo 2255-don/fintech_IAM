@@ -1,0 +1,140 @@
+{% extends "layouts/admin_layout.html" %}
+
+{% block title %}Fintech-IAM | Agents{% endblock %}
+
+{% block workspace %}
+    <div class="relative">
+        <input
+            id="agent-modal-toggle"
+            type="checkbox"
+            class="peer sr-only"
+            {% if agent_modal_open %}checked{% endif %}
+        >
+
+        {% include "includes/page_header.html" with eyebrow="Referentiel terrain" title="Agents" description="Visualisez la structure terrain, le volume client suivi par agent et ouvrez un nouveau profil sans surcharger l'ecran." %}
+
+        <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+            <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
+                <div>
+                    <div class="text-sm text-slate-500">Gestion des profils terrain</div>
+                    <p class="mt-1 text-xs uppercase tracking-[0.18em] text-slate-400">Mot de passe initial par defaut : {{ default_agent_password }}</p>
+                </div>
+                <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700">
+                    Nouvel agent
+                </label>
+            </div>
+
+            {% if agents %}
+                <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                    <table class="w-full min-w-[980px] border-collapse">
+                        <thead class="bg-slate-50/90">
+                            <tr>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Code</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Nom</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Telephone</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Statut</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Clients</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Cycles</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for agent in agents %}
+                                <tr class="border-t border-slate-200/70 align-top">
+                                    <td class="px-4 py-4"><a class="font-medium text-slate-950 hover:text-emerald-700" href="{% url 'admin_agent_detail' agent.id %}">{{ agent.code }}</a></td>
+                                    <td class="px-4 py-4 text-slate-700">{{ agent.user.get_full_name|default:agent.user.username }}</td>
+                                    <td class="px-4 py-4 text-slate-600">{{ agent.telephone|default:"-" }}</td>
+                                    <td class="px-4 py-4">
+                                        <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if agent.actif %}bg-emerald-50 text-emerald-700{% else %}bg-amber-50 text-amber-700{% endif %}">
+                                            {% if agent.actif %}Actif{% else %}Bloque{% endif %}
+                                        </span>
+                                    </td>
+                                    <td class="px-4 py-4 text-slate-600">{{ agent.client_count }}</td>
+                                    <td class="px-4 py-4 text-slate-600">{{ agent.cycle_count }}</td>
+                                    <td class="px-4 py-4">
+                                        <div class="flex flex-wrap gap-2">
+                                            <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'admin_agent_detail' agent.id %}">Voir</a>
+                                            <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700" href="{% url 'admin_agent_update' agent.id %}">Modifier</a>
+                                            <form method="post" action="{% url 'admin_agent_toggle_status' agent.id %}" data-confirm-title="Confirmer cette action ?" data-confirm-text="Le statut de l'agent sera mis a jour." data-confirm-confirm="Valider" data-confirm-icon="warning">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="next" value="{% url 'admin_agent_list' %}">
+                                                <button class="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold transition {% if agent.actif %}border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100{% else %}border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100{% endif %}" type="submit">
+                                                    {% if agent.actif %}Bloquer{% else %}Debloquer{% endif %}
+                                                </button>
+                                            </form>
+                                            <form method="post" action="{% url 'admin_agent_delete' agent.id %}" data-confirm-title="Supprimer cet agent ?" data-confirm-text="L'agent sera supprime logiquement et ne sera plus visible dans la liste." data-confirm-confirm="Supprimer" data-confirm-icon="warning">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="next" value="{% url 'admin_agent_list' %}">
+                                                <button class="inline-flex items-center rounded-full border border-rose-200 bg-rose-50 px-3 py-2 text-xs font-semibold text-rose-700 transition hover:bg-rose-100" type="submit">Supprimer</button>
+                                            </form>
+                                        </div>
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <div class="mb-4 flex justify-end">
+                    <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700">
+                        Creer le premier agent
+                    </label>
+                </div>
+                {% include "includes/empty_state.html" with title="Aucun agent enregistre" description="Commencez par creer un premier agent pour initialiser la structure terrain." %}
+            {% endif %}
+        </section>
+
+        <div class="pointer-events-none fixed inset-0 z-50 flex items-center justify-center bg-slate-950/50 px-4 py-6 opacity-0 transition duration-200 peer-checked:pointer-events-auto peer-checked:opacity-100">
+            <label for="agent-modal-toggle" class="absolute inset-0 block cursor-default backdrop-blur-sm"></label>
+
+            <div class="relative z-10 w-full max-w-2xl overflow-hidden rounded-[1.9rem] border border-white/80 bg-white shadow-[0_36px_90px_rgba(15,23,42,0.24)]">
+                <div class="pointer-events-none absolute inset-x-0 top-0 h-28 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_60%),radial-gradient(circle_at_top_right,_rgba(56,189,248,0.14),_transparent_58%)]"></div>
+
+                <div class="relative p-5 sm:p-6">
+                    <div class="flex items-start justify-between gap-4">
+                        <div class="max-w-xl">
+                            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Creation rapide</p>
+                            <h2 class="mt-2 text-2xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-3xl">Creer un agent</h2>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Le code agent est genere automatiquement par le systeme. Le mot de passe initial est <span class="font-semibold text-slate-900">{{ default_agent_password }}</span>.</p>
+                        </div>
+                        <label for="agent-modal-toggle" class="shrink-0 cursor-pointer rounded-full border border-slate-200/90 bg-white/90 px-3 py-2 text-sm font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-800">
+                            Fermer
+                        </label>
+                    </div>
+
+                    <form method="post" class="mt-6 grid gap-4" data-confirm-title="Creer cet agent ?" data-confirm-text="Le compte agent sera cree avec un code automatique et le mot de passe par defaut password!." data-confirm-confirm="Creer l'agent" data-confirm-icon="question">
+                        {% csrf_token %}
+                        {% if form.non_field_errors %}
+                            <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
+                        {% endif %}
+
+                        <div class="grid gap-4 md:grid-cols-2">
+                            {% for field in form %}
+                                <div class="grid gap-2 {% if field.name == 'adresse' %}md:col-span-2{% endif %}">
+                                    <label class="text-sm font-medium text-slate-700" for="{{ field.id_for_label }}">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% if field.errors %}
+                                        <div class="text-sm text-rose-700">{{ field.errors }}</div>
+                                    {% endif %}
+                                </div>
+                            {% endfor %}
+                        </div>
+
+                        <div class="rounded-[1.15rem] border border-emerald-100 bg-gradient-to-r from-emerald-50 to-cyan-50 px-4 py-3 text-sm leading-6 text-emerald-900">
+                            Le code sera genere automatiquement au format annuel et l'agent devra changer le mot de passe initial apres communication interne.
+                        </div>
+
+                        <div class="flex flex-wrap justify-end gap-3 pt-1">
+                            <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700">
+                                Annuler
+                            </label>
+                            <button class="inline-flex items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700" type="submit">
+                                Creer l'agent
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

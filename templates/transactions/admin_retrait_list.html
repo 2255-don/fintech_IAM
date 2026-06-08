@@ -1,0 +1,41 @@
+{% extends "layouts/admin_layout.html" %}
+
+{% block title %}Fintech-IAM | Retraits{% endblock %}
+
+{% block workspace %}
+    {% include "includes/page_header.html" with eyebrow="Flux financiers" title="Retraits" description="Suivez les retraits standards et les retraits d'urgence saisis sur les clients." %}
+    <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        {% if retraits %}
+            <div class="overflow-x-auto rounded-[1.35rem] border border-slate-200">
+                <table class="min-w-full divide-y divide-slate-200 text-left">
+                    <thead class="bg-slate-50/90">
+                        <tr>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Code</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Type</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Client</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Cycle</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Agent</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Montant</th>
+                            <th class="px-5 py-4 text-xs font-semibold uppercase tracking-[0.18em] text-slate-500">Motif</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-100 bg-white/90">
+                        {% for retrait in retraits %}
+                            <tr class="transition hover:bg-emerald-50/50">
+                                <td class="px-5 py-4 text-sm font-semibold text-slate-900">{{ retrait.code }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ retrait.type }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ retrait.client.code }}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{% if retrait.cycle %}{{ retrait.cycle.code }}{% else %}-{% endif %}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{% if retrait.agent %}{{ retrait.agent.code }}{% else %}-{% endif %}</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ retrait.montant }} FCFA</td>
+                                <td class="px-5 py-4 text-sm text-slate-700">{{ retrait.motif|default:"-" }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            {% include "includes/empty_state.html" with title="Aucun retrait" description="Les retraits client apparaîtront ici des qu'ils seront saisis." %}
+        {% endif %}
+    </section>
+{% endblock %}
