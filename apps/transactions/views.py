@@ -57,13 +57,15 @@ def admin_mouvement_list(request):
 @role_required(UserRole.ADMIN)
 def admin_commission_list(request):
     commission_rows = ReportingService.list_agent_commissions()
-    total_commissions = sum(row["total_commissions"] for row in commission_rows)
+    total_commissions_agent = sum(row["total_commissions"] for row in commission_rows)
+    total_commissions_plateforme = sum(row["total_commissions_plateforme"] for row in commission_rows)
     return render(
         request,
         "transactions/admin_commission_list.html",
         {
             "commission_rows": commission_rows,
-            "total_commissions": total_commissions,
+            "total_commissions_agent": total_commissions_agent,
+            "total_commissions_plateforme": total_commissions_plateforme,
         },
     )
 

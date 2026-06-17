@@ -11,27 +11,30 @@
             {% if agent_modal_open %}checked{% endif %}
         >
 
-        {% include "includes/page_header.html" with eyebrow="Referentiel terrain" title="Agents" description="Visualisez la structure terrain, le volume client suivi par agent et ouvrez un nouveau profil sans surcharger l'ecran." %}
+        {% include "includes/page_header.html" with eyebrow="Référentiel terrain" title="Agents" description="Visualisez la structure terrain, le volume client suivi par agent et ouvrez un nouveau profil sans surcharger l'écran." %}
 
-        <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+        <section class="glass-panel rounded-[1.85rem] p-5">
             <div class="mb-4 flex flex-wrap items-center justify-between gap-3">
                 <div>
                     <div class="text-sm text-slate-500">Gestion des profils terrain</div>
-                    <p class="mt-1 text-xs uppercase tracking-[0.18em] text-slate-400">Mot de passe initial par defaut : {{ default_agent_password }}</p>
+                    <p class="mt-1 text-xs uppercase tracking-[0.18em] text-slate-400">Mot de passe par défaut : {{ default_agent_password }}</p>
                 </div>
-                <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700">
+                <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
                     Nouvel agent
                 </label>
             </div>
 
             {% if agents %}
-                <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                <div class="soft-table overflow-x-auto rounded-[1.5rem]">
                     <table class="w-full min-w-[980px] border-collapse">
                         <thead class="bg-slate-50/90">
                             <tr>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Code</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Nom</th>
-                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Telephone</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Téléphone</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Statut</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Clients</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Cycles</th>
@@ -46,20 +49,27 @@
                                     <td class="px-4 py-4 text-slate-600">{{ agent.telephone|default:"-" }}</td>
                                     <td class="px-4 py-4">
                                         <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if agent.actif %}bg-emerald-50 text-emerald-700{% else %}bg-amber-50 text-amber-700{% endif %}">
-                                            {% if agent.actif %}Actif{% else %}Bloque{% endif %}
+                                            {% if agent.actif %}Actif{% else %}Bloqué{% endif %}
                                         </span>
                                     </td>
-                                    <td class="px-4 py-4 text-slate-600">{{ agent.client_count }}</td>
-                                    <td class="px-4 py-4 text-slate-600">{{ agent.cycle_count }}</td>
+                                    <td class="px-4 py-4 text-slate-600"><span class="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-xs font-semibold text-cyan-700">{{ agent.client_count }}</span></td>
+                                    <td class="px-4 py-4 text-slate-600"><span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-xs font-semibold text-emerald-700">{{ agent.cycle_count }}</span></td>
                                     <td class="px-4 py-4">
                                         <div class="flex flex-wrap gap-2">
                                             <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'admin_agent_detail' agent.id %}">Voir</a>
                                             <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-3 py-2 text-xs font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700" href="{% url 'admin_agent_update' agent.id %}">Modifier</a>
+                                            <form method="post" action="{% url 'admin_agent_reset_password' agent.id %}" data-confirm-title="Réinitialiser le mot de passe ?" data-confirm-text="Le mot de passe sera remis à password! et l'agent sera réactivé." data-confirm-confirm="Réinitialiser" data-confirm-icon="warning">
+                                                {% csrf_token %}
+                                                <input type="hidden" name="next" value="{% url 'admin_agent_list' %}">
+                                                <button class="inline-flex items-center rounded-full border border-cyan-200 bg-cyan-50 px-3 py-2 text-xs font-semibold text-cyan-700 transition hover:bg-cyan-100" type="submit">
+                                                    Réinitialiser le mot de passe
+                                                </button>
+                                            </form>
                                             <form method="post" action="{% url 'admin_agent_toggle_status' agent.id %}" data-confirm-title="Confirmer cette action ?" data-confirm-text="Le statut de l'agent sera mis a jour." data-confirm-confirm="Valider" data-confirm-icon="warning">
                                                 {% csrf_token %}
                                                 <input type="hidden" name="next" value="{% url 'admin_agent_list' %}">
                                                 <button class="inline-flex items-center rounded-full px-3 py-2 text-xs font-semibold transition {% if agent.actif %}border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100{% else %}border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100{% endif %}" type="submit">
-                                                    {% if agent.actif %}Bloquer{% else %}Debloquer{% endif %}
+                                                    {% if agent.actif %}Bloquer{% else %}Débloquer{% endif %}
                                                 </button>
                                             </form>
                                             <form method="post" action="{% url 'admin_agent_delete' agent.id %}" data-confirm-title="Supprimer cet agent ?" data-confirm-text="L'agent sera supprime logiquement et ne sera plus visible dans la liste." data-confirm-confirm="Supprimer" data-confirm-icon="warning">
@@ -76,11 +86,14 @@
                 </div>
             {% else %}
                 <div class="mb-4 flex justify-end">
-                    <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700">
-                        Creer le premier agent
+                    <label for="agent-modal-toggle" class="inline-flex cursor-pointer items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700">
+                        <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                            <path d="M8 3v10M3 8h10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                        </svg>
+                        Créer le premier agent
                     </label>
                 </div>
-                {% include "includes/empty_state.html" with title="Aucun agent enregistre" description="Commencez par creer un premier agent pour initialiser la structure terrain." %}
+                {% include "includes/empty_state.html" with title="Aucun agent enregistré" description="Commencez par créer un premier agent pour initialiser la structure terrain." %}
             {% endif %}
         </section>
 
@@ -93,16 +106,16 @@
                 <div class="relative p-5 sm:p-6">
                     <div class="flex items-start justify-between gap-4">
                         <div class="max-w-xl">
-                            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Creation rapide</p>
-                            <h2 class="mt-2 text-2xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-3xl">Creer un agent</h2>
-                            <p class="mt-2 text-sm leading-6 text-slate-500">Le code agent est genere automatiquement par le systeme. Le mot de passe initial est <span class="font-semibold text-slate-900">{{ default_agent_password }}</span>.</p>
+                            <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Création rapide</p>
+                            <h2 class="mt-2 text-2xl font-semibold tracking-[-0.04em] text-slate-950 sm:text-3xl">Créer un agent</h2>
+                            <p class="mt-2 text-sm leading-6 text-slate-500">Le code agent est généré automatiquement par le système. Le mot de passe initial est <span class="font-semibold text-slate-900">{{ default_agent_password }}</span>.</p>
                         </div>
                         <label for="agent-modal-toggle" class="shrink-0 cursor-pointer rounded-full border border-slate-200/90 bg-white/90 px-3 py-2 text-sm font-semibold text-slate-500 transition hover:border-slate-300 hover:text-slate-800">
                             Fermer
                         </label>
                     </div>
 
-                    <form method="post" class="mt-6 grid gap-4" data-confirm-title="Creer cet agent ?" data-confirm-text="Le compte agent sera cree avec un code automatique et le mot de passe par defaut password!." data-confirm-confirm="Creer l'agent" data-confirm-icon="question">
+                    <form method="post" class="mt-6 grid gap-4" data-confirm-title="Créer cet agent ?" data-confirm-text="Le compte agent sera créé avec un code automatique et le mot de passe par défaut password!." data-confirm-confirm="Créer l'agent" data-confirm-icon="question">
                         {% csrf_token %}
                         {% if form.non_field_errors %}
                             <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
@@ -121,7 +134,7 @@
                         </div>
 
                         <div class="rounded-[1.15rem] border border-emerald-100 bg-gradient-to-r from-emerald-50 to-cyan-50 px-4 py-3 text-sm leading-6 text-emerald-900">
-                            Le code sera genere automatiquement au format annuel et l'agent devra changer le mot de passe initial apres communication interne.
+                            Le code sera généré automatiquement au format annuel et l'agent pourra recevoir un nouveau mot de passe par l'administrateur en cas d'oubli.
                         </div>
 
                         <div class="flex flex-wrap justify-end gap-3 pt-1">
@@ -129,7 +142,7 @@
                                 Annuler
                             </label>
                             <button class="inline-flex items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700" type="submit">
-                                Creer l'agent
+                                Créer l'agent
                             </button>
                         </div>
                     </form>

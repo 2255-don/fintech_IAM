@@ -61,14 +61,27 @@ class ReportingService:
     @staticmethod
     def list_agent_commissions(*, agent_id: int | None = None) -> list[dict]:
         sql = """
-            SELECT agent_id, agent_code, total_commissions, nb_commissions
-            FROM v_agent_commissions
+            SELECT
+                a.id AS agent_id,
+                a.code AS agent_code,
+                COALESCE(SUM(CASE WHEN m.type = 'COM_AGENT' THEN m.montant ELSE 0 END), 0) AS total_commissions,
+                COALESCE(SUM(CASE WHEN m.type = 'COM_AGENT' THEN 1 ELSE 0 END), 0) AS nb_commissions,
+                COALESCE(SUM(CASE WHEN m.type = 'COM_INSTITUTION' THEN m.montant ELSE 0 END), 0) AS total_commissions_plateforme,
+                COALESCE(SUM(CASE WHEN m.type = 'COM_INSTITUTION' THEN 1 ELSE 0 END), 0) AS nb_commissions_plateforme
+            FROM agents_agent a
+            LEFT JOIN transactions_mouvement m
+                ON m.agent_id = a.id
+                AND m.deleted_at IS NULL
+            WHERE a.deleted_at IS NULL
         """
         params = []
         if agent_id is not None:
-            sql += " WHERE agent_id = %s"
+            sql += " AND a.id = %s"
             params.append(agent_id)
-        sql += " ORDER BY total_commissions DESC, agent_code ASC"
+        sql += """
+            GROUP BY a.id, a.code
+            ORDER BY total_commissions DESC, agent_code ASC
+        """
 
         with connection.cursor() as cursor:
             cursor.execute(sql, params)
@@ -80,6 +93,8 @@ class ReportingService:
                 "agent_code": row[1],
                 "total_commissions": int(row[2] or 0),
                 "nb_commissions": int(row[3] or 0),
+                "total_commissions_plateforme": int(row[4] or 0),
+                "nb_commissions_plateforme": int(row[5] or 0),
             }
             for row in rows
         ]

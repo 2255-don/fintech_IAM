@@ -7,7 +7,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from apps.accounts.models import UserRole
 from apps.accounts.permissions import role_required
 from apps.agents.services import AgentService
-from apps.clients.forms import ClientCreateForm
+from apps.clients.forms import ClientCreateForm, ClientUpdateForm
 from apps.clients.models import Client
 from apps.clients.services import ClientService
 from apps.core.identifiers import generate_business_code
@@ -119,7 +119,7 @@ def agent_client_create(request):
                     "created_by": request.user.id,
                 },
             )
-            messages.success(request, "Client cree avec succes.")
+            messages.success(request, "Client créé avec succès.")
             return redirect("agent_client_detail", client_id=client.id)
     else:
         form = ClientCreateForm()
@@ -146,3 +146,54 @@ def agent_client_detail(request, client_id: int):
             is_agent_space=True,
         ),
     )
+
+
+@role_required(UserRole.AGENT)
+def agent_client_update(request, client_id: int):
+    agent = AgentService.get_agent_for_user(request.user)
+    client = get_object_or_404(
+        Client.objects.select_related("agent__user"),
+        id=client_id,
+        agent=agent,
+        deleted_at__isnull=True,
+    )
+
+    if request.method == "POST":
+        form = ClientUpdateForm(request.POST)
+        if form.is_valid():
+            ClientService.update_client(
+                client,
+                nom=form.cleaned_data["nom"],
+                prenom=form.cleaned_data["prenom"],
+                telephone=form.cleaned_data["telephone"],
+                genre=form.cleaned_data["genre"],
+                date_naissance=form.cleaned_data["date_naissance"],
+                email=form.cleaned_data["email"],
+                adresse=form.cleaned_data["adresse"],
+                updated_by=request.user,
+            )
+            logger.info(
+                "Client modifie depuis l'espace agent",
+                extra={
+                    "client_id": client.id,
+                    "client_code": client.code,
+                    "agent_id": agent.id,
+                    "updated_by": request.user.id,
+                },
+            )
+            messages.success(request, f"Les informations de {client.code} ont été mises à jour avec succès.")
+            return redirect("agent_client_detail", client_id=client.id)
+    else:
+        form = ClientUpdateForm(
+            initial={
+                "nom": client.nom,
+                "prenom": client.prenom,
+                "telephone": client.telephone,
+                "genre": client.genre,
+                "date_naissance": client.date_naissance,
+                "email": client.email,
+                "adresse": client.adresse,
+            }
+        )
+
+    return render(request, "clients/agent_update.html", {"form": form, "client": client})

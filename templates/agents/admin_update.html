@@ -3,9 +3,9 @@
 {% block title %}Fintech-IAM | Modifier agent{% endblock %}
 
 {% block workspace %}
-    {% include "includes/page_header.html" with eyebrow="Mise a jour" title=agent.code description="Modifiez les informations du compte et du profil agent depuis une page dediee et claire." %}
+    {% include "includes/page_header.html" with eyebrow="Mise à jour" title=agent.code description="Modifiez les informations du compte et du profil agent depuis une page dédiée et claire." %}
     <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <form method="post" class="grid gap-5" data-confirm-title="Mettre a jour cet agent ?" data-confirm-text="Les informations du compte et du profil agent seront mises a jour immediatement." data-confirm-confirm="Enregistrer les modifications" data-confirm-icon="question">
+        <form method="post" class="grid gap-5" data-confirm-title="Mettre à jour cet agent ?" data-confirm-text="Les informations du compte et du profil agent seront mises à jour immédiatement." data-confirm-confirm="Enregistrer les modifications" data-confirm-icon="question">
             {% csrf_token %}
             {% if form.non_field_errors %}
                 <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
@@ -23,7 +23,7 @@
             </div>
             <div class="flex flex-wrap justify-end gap-3 pt-2">
                 <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'admin_agent_list' %}">Retour </a>
-                <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'admin_agent_detail' agent.id %}">Retour detail</a>
+                <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'admin_agent_detail' agent.id %}">Retour détail</a>
                 <button class="inline-flex items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700" type="submit">Enregistrer</button>
             </div>
         </form>

@@ -3,30 +3,37 @@
 {% block title %}Fintech-IAM | Dashboard Agent{% endblock %}
 
 {% block workspace %}
-    {% include "includes/page_header.html" with eyebrow="Execution terrain" title="Tableau de bord agent" description="Pilotez votre portefeuille client, vos cycles et votre disponible global sans quitter votre espace operationnel." action_links=dashboard_actions %}
+    {% include "includes/page_header.html" with eyebrow="Exécution terrain" title="Tableau de bord agent" description="Pilotez votre portefeuille client, vos cycles et votre disponible global sans quitter votre espace opérationnel." action_links=dashboard_actions %}
 
     <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {% include "includes/stat_card.html" with label="Mes clients" value=client_count note="Portefeuille directement rattache" %}
+        {% include "includes/stat_card.html" with label="Mes clients" value=client_count note="Portefeuille directement rattaché" %}
         {% include "includes/stat_card.html" with label="Cycles en cours" value=cycles_in_progress note="Cycles encore alimentables" %}
-        {% include "includes/stat_card.html" with label="Cycles clotures" value=cycles_closed note="Cycles deja credites" %}
+        {% include "includes/stat_card.html" with label="Cycles clôturés" value=cycles_closed note="Cycles déjà crédités" %}
         {% include "includes/stat_card.html" with label="Disponible global" value=portfolio_retirable note="Retirable total du portefeuille" %}
     </section>
 
     <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {% include "includes/stat_card.html" with label="Mes commissions" value=total_commissions note="Total calcule depuis les mouvements COM_AGENT" %}
+        {% include "includes/stat_card.html" with label="Mes commissions" value=total_commissions note="Part gagnée sur les clôtures et retraits spéciaux" %}
     </section>
 
     <div class="grid gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,0.9fr)]">
-        <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-            <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Clients a suivre en priorite</h2>
+        <section class="glass-panel rounded-[1.8rem] p-5">
+            <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+                <span class="section-title__icon">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 2.5a3 3 0 100 6 3 3 0 000-6zm-4.5 10c0-1.66 2.02-3 4.5-3s4.5 1.34 4.5 3V13.5h-9v-1z" fill="currentColor"/>
+                    </svg>
+                </span>
+                Clients à suivre en priorité
+            </h2>
             {% if top_clients %}
-                <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                <div class="soft-table overflow-x-auto rounded-[1.5rem]">
                     <table class="w-full min-w-[720px] border-collapse">
                         <thead class="bg-slate-50/90">
                             <tr>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Client</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Disponible</th>
-                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Credits</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Crédits</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Retraits</th>
                             </tr>
                         </thead>
@@ -34,7 +41,7 @@
                             {% for row in top_clients %}
                                 <tr class="border-t border-slate-200/70">
                                     <td class="px-4 py-4"><a class="font-medium text-slate-950 hover:text-cyan-700" href="{% url 'agent_client_detail' row.client_id %}">{{ row.client_nom_complet }}</a></td>
-                                    <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">{{ row.montant_retirable }} FCFA</span></td>
+                                    <td class="px-4 py-4"><span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm">{{ row.montant_retirable }} FCFA</span></td>
                                     <td class="px-4 py-4 text-slate-600">{{ row.total_credit_client }} FCFA</td>
                                     <td class="px-4 py-4 text-slate-600">{{ row.total_retraits }} FCFA</td>
                                 </tr>
@@ -43,33 +50,68 @@
                     </table>
                 </div>
             {% else %}
-                {% include "includes/empty_state.html" with title="Aucun client disponible" description="Commencez par creer un client puis ouvrir un cycle pour activer votre portefeuille." %}
+                {% include "includes/empty_state.html" with title="Aucun client disponible" description="Commencez par créer un client puis ouvrir un cycle pour activer votre portefeuille." %}
             {% endif %}
         </section>
 
-        <aside class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-            <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Actions rapides</h2>
+        <aside class="glass-panel rounded-[1.8rem] p-5">
+            <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+                <span class="section-title__icon">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                Actions rapides
+            </h2>
             <div class="grid gap-3">
-                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-cyan-300 hover:bg-white" href="{% url 'agent_client_create' %}">
-                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Ajouter un client</div>
-                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Creer rapidement une nouvelle fiche cliente depuis votre portefeuille.</p>
+                <a class="action-tile rounded-[1.35rem] border border-slate-200/80 bg-gradient-to-r from-cyan-50/90 to-white px-4 py-4 transition hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-white" href="{% url 'agent_client_create' %}">
+                    <div class="mb-2 flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-[0_14px_28px_rgba(8,145,178,0.22)]">
+                            <svg class="h-5 w-5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M8 2.5a3 3 0 100 6 3 3 0 000-6zm-4.5 10c0-1.66 2.02-3 4.5-3s4.5 1.34 4.5 3V13.5h-9v-1z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <div class="font-semibold tracking-[-0.02em] text-slate-950">Ajouter un client</div>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Créer rapidement une nouvelle fiche cliente depuis votre portefeuille.</p>
                 </a>
-                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-cyan-300 hover:bg-white" href="{% url 'agent_cycle_list' %}">
-                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Suivre mes cycles</div>
-                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Retrouver vos cycles en cours, clotures et l'avancement vers 31 collectes.</p>
+                <a class="action-tile rounded-[1.35rem] border border-slate-200/80 bg-gradient-to-r from-emerald-50/90 to-white px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" href="{% url 'agent_cycle_list' %}">
+                    <div class="mb-2 flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-[0_14px_28px_rgba(16,185,129,0.22)]">
+                            <svg class="h-5 w-5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 4.5h10M3 8h10M3 11.5h6" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <div class="font-semibold tracking-[-0.02em] text-slate-950">Suivre mes cycles</div>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Retrouver vos cycles en cours, clôturés et l'avancement vers 31 collectes.</p>
                 </a>
-                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-cyan-300 hover:bg-white" href="{% url 'agent_commission_list' %}">
-                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Verifier mes commissions</div>
-                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Controlez vos gains et le rythme des clotures de cycles.</p>
+                <a class="action-tile rounded-[1.35rem] border border-slate-200/80 bg-gradient-to-r from-amber-50/90 to-white px-4 py-4 transition hover:-translate-y-0.5 hover:border-amber-300 hover:bg-white" href="{% url 'agent_commission_list' %}">
+                    <div class="mb-2 flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-[0_14px_28px_rgba(245,158,11,0.22)]">
+                            <svg class="h-5 w-5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M3 11.5V8.5M8 11.5V4.5M13 11.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                            </svg>
+                        </span>
+                        <div class="font-semibold tracking-[-0.02em] text-slate-950">Vérifier mes commissions</div>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Contrôlez vos gains et le rythme des clôtures de cycles.</p>
                 </a>
             </div>
         </aside>
     </div>
 
-    <section class="mt-4 rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Dernieres operations</h2>
+    <section class="glass-panel mt-4 rounded-[1.8rem] p-5">
+        <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+            <span class="section-title__icon">
+                <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2.5 11.5l3-3 2 2 4-5 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            Dernières opérations
+        </h2>
         {% if recent_mouvements %}
-            <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+            <div class="soft-table overflow-x-auto rounded-[1.5rem]">
                 <table class="w-full min-w-[720px] border-collapse">
                     <thead class="bg-slate-50/90">
                         <tr>
@@ -94,7 +136,7 @@
                 </table>
             </div>
         {% else %}
-            {% include "includes/empty_state.html" with title="Aucune operation recente" description="Vos prochains depots, retraits et credits de cloture apparaitront ici." %}
+            {% include "includes/empty_state.html" with title="Aucune opération récente" description="Vos prochains dépôts, retraits et crédits de clôture apparaîtront ici." %}
         {% endif %}
     </section>
 {% endblock %}

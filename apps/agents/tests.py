@@ -77,6 +77,18 @@ class AgentServiceTests(TestCase):
         self.assertFalse(agent.actif)
         self.assertFalse(user.is_active)
 
+    def test_reset_password_restores_default_password_and_access(self):
+        user = User.objects.create_user(username="agent_reset", password="TempPass123!", role=UserRole.AGENT)
+        agent = Agent.objects.create(user=user, code=f"AG-{date.today().year}-0052", actif=False)
+
+        AgentService.reset_password(agent)
+        agent.refresh_from_db()
+        user.refresh_from_db()
+
+        self.assertTrue(user.check_password(AgentService.DEFAULT_PASSWORD))
+        self.assertTrue(agent.actif)
+        self.assertTrue(user.is_active)
+
 
 class AgentAdminViewTests(TestCase):
     def setUp(self):
@@ -186,3 +198,25 @@ class AgentAdminViewTests(TestCase):
         self.assertRedirects(response, reverse("admin_agent_list"))
         self.assertIsNotNone(self.agent.deleted_at)
         self.assertFalse(self.agent_user.is_active)
+
+    def test_admin_can_reset_agent_password(self):
+        self.client.force_login(self.admin_user)
+        self.agent_user.set_password("AutrePass123!")
+        self.agent_user.is_active = False
+        self.agent_user.save(update_fields=["password", "is_active"])
+        self.agent.actif = False
+        self.agent.save(update_fields=["actif"])
+
+        response = self.client.post(
+            reverse("admin_agent_reset_password", args=[self.agent.id]),
+            {"next": reverse("admin_agent_detail", args=[self.agent.id])},
+            follow=True,
+        )
+
+        self.agent.refresh_from_db()
+        self.agent_user.refresh_from_db()
+        self.assertRedirects(response, reverse("admin_agent_detail", args=[self.agent.id]))
+        self.assertTrue(self.agent_user.check_password(AgentService.DEFAULT_PASSWORD))
+        self.assertTrue(self.agent.actif)
+        self.assertTrue(self.agent_user.is_active)
+        self.assertContains(response, "réinitialisé")

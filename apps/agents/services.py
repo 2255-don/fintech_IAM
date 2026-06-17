@@ -119,3 +119,14 @@ class AgentService:
         agent.user.save(update_fields=["is_active"])
         agent.save(update_fields=["deleted_at", "deleted_by", "updated_by", "actif", "updated_at"])
         return agent
+
+    @classmethod
+    @transaction.atomic
+    def reset_password(cls, agent: Agent, *, updated_by=None) -> Agent:
+        agent.user.set_password(cls.DEFAULT_PASSWORD)
+        agent.user.is_active = True
+        agent.user.save(update_fields=["password", "is_active"])
+        agent.actif = True
+        agent.updated_by = updated_by
+        agent.save(update_fields=["actif", "updated_by", "updated_at"])
+        return agent

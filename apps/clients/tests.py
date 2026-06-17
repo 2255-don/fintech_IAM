@@ -75,3 +75,30 @@ class ClientServiceTests(TestCase):
                 nom="Diop",
                 telephone="76000000",
             )
+
+    def test_update_client_updates_expected_fields(self):
+        client = Client.objects.create(
+            code="CLI-2026-0102",
+            agent=self.agent,
+            nom="Diallo",
+            prenom="Awa",
+            telephone="77000000",
+            created_by=self.user,
+            updated_by=self.user,
+        )
+
+        ClientService.update_client(
+            client,
+            nom="Diallo",
+            prenom="Aminata",
+            telephone="78000000",
+            genre="F",
+            email="aminata@example.com",
+            adresse="Bamako",
+            updated_by=self.user,
+        )
+
+        client.refresh_from_db()
+        self.assertEqual(client.prenom, "Aminata")
+        self.assertEqual(client.telephone, "78000000")
+        self.assertEqual(client.email, "aminata@example.com")

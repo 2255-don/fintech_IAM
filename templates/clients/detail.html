@@ -1,14 +1,14 @@
 {% extends layout_template %}
 
-{% block title %}Fintech-IAM | Detail client{% endblock %}
+{% block title %}Fintech-IAM | Détail client{% endblock %}
 
 {% block workspace %}
     <div class="rounded-[1.7rem] border border-white/70 bg-white/88 px-6 py-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
         <div class="flex flex-col gap-5 xl:flex-row xl:items-start xl:justify-between xl:gap-8">
             <div class="min-w-0 max-w-3xl flex-1">
-                <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Detail client</p>
+                <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Détail client</p>
                 <h1 class="mt-3 text-4xl font-semibold tracking-[-0.05em] text-slate-950">{{ client.code }}</h1>
-                <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-600">Consultez les informations du client, ses cycles et son historique recent dans une vue metier dediee.</p>
+                <p class="mt-4 max-w-3xl text-lg leading-8 text-slate-600">Consultez les informations du client, ses cycles et son historique récent dans une vue métier dédiée.</p>
             </div>
             {% if is_agent_space %}
                 <div class="flex w-full flex-wrap items-start gap-3 xl:w-auto xl:flex-nowrap xl:justify-end xl:self-start">
@@ -18,8 +18,9 @@
                         <a class="inline-flex min-h-[3rem] items-center justify-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-emerald-700" href="{% url 'agent_cycle_detail' current_active_cycle.id %}">Voir le cycle en cours</a>
                     {% endif %}
                     <a class="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'agent_retrait_create' client.id %}">Retrait standard</a>
+                    <a class="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-cyan-200 bg-cyan-50 px-5 py-3 text-sm font-semibold text-cyan-800 transition hover:border-cyan-300 hover:bg-cyan-100" href="{% url 'agent_client_update' client.id %}">Modifier les informations</a>
                     {% if current_active_cycle %}
-                        <a class="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-3 text-sm font-semibold text-amber-800 transition hover:border-amber-300 hover:bg-amber-100" href="{% url 'agent_emergency_withdrawal_create' current_active_cycle.id %}">Retrait special</a>
+                        <a class="inline-flex min-h-[3rem] items-center justify-center rounded-full border border-amber-200 bg-amber-50 px-5 py-3 text-sm font-semibold text-amber-800 transition hover:border-amber-300 hover:bg-amber-100" href="{% url 'agent_emergency_withdrawal_create' current_active_cycle.id %}">Retrait spécial</a>
                     {% endif %}
                 </div>
             {% endif %}
@@ -32,24 +33,24 @@
             <div class="mt-5 grid gap-5 sm:grid-cols-2">
                 <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Nom complet</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.nom }} {{ client.prenom }}</p></div>
                 <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Agent responsable</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.agent.code }}</p></div>
-                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Telephone</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.telephone }}</p></div>
-                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Email</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.email|default:"-" }}</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Téléphone</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.telephone }}</p></div>
+                <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">E-mail</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.email|default:"-" }}</p></div>
                 <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Genre</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.genre|default:"-" }}</p></div>
                 <div><p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Adresse</p><p class="mt-2 text-base font-medium text-slate-900">{{ client.adresse|default:"-" }}</p></div>
             </div>
         </section>
         <aside class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
             <div class="rounded-[1.55rem] border border-slate-200/80 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.18),_transparent_55%),linear-gradient(180deg,rgba(255,255,255,0.96),rgba(248,250,252,0.92))] px-5 py-5">
-                <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Synthese financiere</p>
+                <p class="text-[0.72rem] font-semibold uppercase tracking-[0.22em] text-emerald-700">Synthèse financière</p>
                 <div class="mt-3 flex items-end justify-between gap-4">
                     <div>
                         <p class="text-3xl font-semibold tracking-[-0.05em] text-slate-950">{{ financial_summary.montant_retirable }} FCFA</p>
-                        <p class="mt-2 text-sm leading-6 text-slate-600">Disponible immediatement retirable par le client.</p>
+                        <p class="mt-2 text-sm leading-6 text-slate-600">Disponible immédiatement retirable par le client.</p>
                     </div>
                     {% if current_active_cycle %}
                         <span class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-emerald-700">Cycle actif</span>
                     {% elif cycle_metrics.total_cycles %}
-                        <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-600">Pret pour nouveau cycle</span>
+                        <span class="inline-flex rounded-full bg-slate-100 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-slate-600">Prêt pour un nouveau cycle</span>
                     {% else %}
                         <span class="inline-flex rounded-full bg-cyan-50 px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] text-cyan-700">Nouveau client</span>
                     {% endif %}
@@ -58,19 +59,19 @@
 
             <div class="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-2">
                 <div class="rounded-[1.2rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Credits cumules</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Crédits cumulés</p>
                     <p class="mt-2 text-xl font-semibold tracking-[-0.04em] text-slate-950">{{ financial_summary.total_credit_client }} FCFA</p>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">Capital credite depuis les clotures.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Capital crédité depuis les clôtures.</p>
                 </div>
                 <div class="rounded-[1.2rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Retraits standard</p>
                     <p class="mt-2 text-xl font-semibold tracking-[-0.04em] text-slate-950">{{ financial_summary.total_retraits }} FCFA</p>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">Sorties deja effectuees sur le disponible.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Sorties déjà effectuées sur le disponible.</p>
                 </div>
                 <div class="rounded-[1.2rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Cycles traites</p>
                     <p class="mt-2 text-xl font-semibold tracking-[-0.04em] text-slate-950">{{ cycle_metrics.total_cycles }}</p>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">{{ cycle_metrics.closed_cycles }} clotures normales, {{ cycle_metrics.early_closed_cycles }} anticipees.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">{{ cycle_metrics.closed_cycles }} clôtures normales, {{ cycle_metrics.early_closed_cycles }} anticipées.</p>
                 </div>
                 <div class="rounded-[1.2rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Cycle en cours</p>
@@ -90,16 +91,16 @@
                     <div class="flex items-start justify-between gap-4 rounded-[1rem] border border-slate-200 bg-slate-50/80 px-3 py-3">
                         <div>
                             <p class="font-semibold text-slate-900">Disponibilite</p>
-                            <p class="mt-1 leading-6">{% if financial_summary.montant_retirable > 0 %}Le client peut effectuer un retrait standard tout de suite.{% else %}Aucun disponible standard immediat pour le moment.{% endif %}</p>
+                            <p class="mt-1 leading-6">{% if financial_summary.montant_retirable > 0 %}Le client peut effectuer un retrait standard tout de suite.{% else %}Aucun disponible standard immédiat pour le moment.{% endif %}</p>
                         </div>
                         <span class="mt-0.5 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if financial_summary.montant_retirable > 0 %}bg-emerald-50 text-emerald-700{% else %}bg-slate-100 text-slate-600{% endif %}">{% if financial_summary.montant_retirable > 0 %}Disponible{% else %}En attente{% endif %}</span>
                     </div>
                     <div class="flex items-start justify-between gap-4 rounded-[1rem] border border-slate-200 bg-slate-50/80 px-3 py-3">
                         <div>
                             <p class="font-semibold text-slate-900">Parcours cycle</p>
-                            <p class="mt-1 leading-6">{% if current_active_cycle %}Le client a un cycle actif. Les depots et le retrait special restent accessibles sur ce parcours.{% elif cycle_metrics.total_cycles %}Aucun cycle actif. Un nouveau cycle peut etre ouvert si le client souhaite repartir.{% else %}Aucun cycle encore enregistre sur ce client.{% endif %}</p>
+                            <p class="mt-1 leading-6">{% if current_active_cycle %}Le client a un cycle actif. Les dépôts et le retrait spécial restent accessibles sur ce parcours.{% elif cycle_metrics.total_cycles %}Aucun cycle actif. Un nouveau cycle peut être ouvert si le client souhaite repartir.{% else %}Aucun cycle encore enregistré sur ce client.{% endif %}</p>
                         </div>
-                        <span class="mt-0.5 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if current_active_cycle %}bg-emerald-50 text-emerald-700{% elif cycle_metrics.total_cycles %}bg-cyan-50 text-cyan-700{% else %}bg-slate-100 text-slate-600{% endif %}">{% if current_active_cycle %}Actif{% elif cycle_metrics.total_cycles %}Reouverture possible{% else %}Initialisation{% endif %}</span>
+                        <span class="mt-0.5 inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if current_active_cycle %}bg-emerald-50 text-emerald-700{% elif cycle_metrics.total_cycles %}bg-cyan-50 text-cyan-700{% else %}bg-slate-100 text-slate-600{% endif %}">{% if current_active_cycle %}Actif{% elif cycle_metrics.total_cycles %}Réouverture possible{% else %}Initialisation{% endif %}</span>
                     </div>
                     {% if last_mouvement %}
                         <div class="rounded-[1rem] border border-slate-200 bg-slate-50/80 px-3 py-3">
@@ -113,13 +114,13 @@
 
             {% if is_agent_space %}
                 <div class="mt-5 rounded-[1.35rem] border border-amber-200 bg-amber-50/70 px-4 py-4">
-                    <h2 class="text-base font-semibold tracking-[-0.03em] text-amber-900">Reperes metier</h2>
+                    <h2 class="text-base font-semibold tracking-[-0.03em] text-amber-900">Repères métier</h2>
                     <div class="mt-3 space-y-2 text-sm leading-6 text-amber-900">
-                        <p>Le retrait standard utilise uniquement le disponible deja credite au client.</p>
+                        <p>Le retrait standard utilise uniquement le disponible déjà crédité au client.</p>
                         {% if current_active_cycle %}
-                            <p>Le retrait special cloture le cycle en cours par anticipation, applique une penalite egale a une mise et partage cette penalite a 50/50 entre agent et plateforme.</p>
+                            <p>Le retrait spécial clôture le cycle en cours par anticipation, applique une pénalité égale à une mise et partage cette pénalité à 50/50 entre agent et plateforme.</p>
                         {% else %}
-                            <p>En l'absence de cycle actif, seul le retrait standard peut etre utilise si un disponible existe.</p>
+                            <p>En l'absence de cycle actif, seul le retrait standard peut être utilisé si un disponible existe.</p>
                         {% endif %}
                     </div>
                 </div>
@@ -161,23 +162,23 @@
                 </table>
             </div>
         {% else %}
-            {% include "includes/empty_state.html" with title="Aucun cycle" description="Ce client n'a pas encore de cycle ouvert ou historise." %}
+            {% include "includes/empty_state.html" with title="Aucun cycle" description="Ce client n'a pas encore de cycle ouvert ou historisé." %}
         {% endif %}
     </section>
 
     <section class="mt-6 rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Historique recent</h2>
+        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Historique récent</h2>
         {% if recent_mouvements %}
             <div class="mt-5 space-y-3">
                 {% for mouvement in recent_mouvements %}
                     <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                         <div class="text-base font-semibold text-slate-950">{{ mouvement.code }} • {{ mouvement.type }} • {{ mouvement.montant }} FCFA</div>
-                        <p class="mt-1 text-sm leading-6 text-slate-600">{% if mouvement.cycle %}Cycle {{ mouvement.cycle.code }}{% else %}Sans cycle specifique{% endif %}{% if mouvement.reference_operation %} • Reference {{ mouvement.reference_operation }}{% endif %}</p>
+                            <p class="mt-1 text-sm leading-6 text-slate-600">{% if mouvement.cycle %}Cycle {{ mouvement.cycle.code }}{% else %}Sans cycle spécifique{% endif %}{% if mouvement.reference_operation %} • Référence {{ mouvement.reference_operation }}{% endif %}</p>
                     </div>
                 {% endfor %}
             </div>
         {% else %}
-            {% include "includes/empty_state.html" with title="Aucun mouvement recent" description="Les depots, credits ou retraits lies a ce client apparaitront ici." %}
+            {% include "includes/empty_state.html" with title="Aucun mouvement récent" description="Les dépôts, crédits ou retraits liés à ce client apparaîtront ici." %}
         {% endif %}
     </section>
 {% endblock %}

@@ -3,31 +3,39 @@
 {% block title %}Fintech-IAM | Dashboard Admin{% endblock %}
 
 {% block workspace %}
-    {% include "includes/page_header.html" with eyebrow="Pilotage global" title="Tableau de bord administrateur" description="Suivez les volumes clefs, les disponibilites clients et les derniers mouvements depuis un espace de supervision oriente decision." %}
+    {% include "includes/page_header.html" with eyebrow="Pilotage global" title="Tableau de bord administrateur" description="Suivez les volumes clés, les disponibilités clients et les derniers mouvements depuis un espace de supervision orienté décision." %}
 
     <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {% include "includes/stat_card.html" with label="Agents actifs" value=agent_count note="Base operationnelle disponible" %}
+        {% include "includes/stat_card.html" with label="Agents actifs" value=agent_count note="Équipe terrain disponible" %}
         {% include "includes/stat_card.html" with label="Clients" value=client_count note="Portefeuille global suivi" %}
         {% include "includes/stat_card.html" with label="Cycles en cours" value=cycles_in_progress note="Cycles encore alimentables" %}
-        {% include "includes/stat_card.html" with label="Cycles clotures" value=cycles_closed note="Cycles finalises et credites" %}
+        {% include "includes/stat_card.html" with label="Cycles clôturés" value=cycles_closed note="Cycles finalisés et crédités" %}
     </section>
 
     <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {% include "includes/stat_card.html" with label="Total commissions agent" value=total_commissions note="Synthese issue de la vue SQL" %}
+        {% include "includes/stat_card.html" with label="Commissions agents" value=total_commissions_agent note="Part reversée aux agents" %}
+        {% include "includes/stat_card.html" with label="Commissions plateforme" value=total_commissions_plateforme note="Part conservée par la plateforme" %}
         {% include "includes/stat_card.html" with label="Total retraits" value=total_retraits note="Historique global des sorties client" %}
     </section>
 
     <div class="grid gap-5 xl:grid-cols-[minmax(0,1.5fr)_minmax(320px,0.9fr)]">
-        <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-            <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Clients avec disponible retirable</h2>
+        <section class="glass-panel rounded-[1.8rem] p-5">
+            <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+                <span class="section-title__icon">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 2.5a3 3 0 100 6 3 3 0 000-6zm-4.5 10c0-1.66 2.02-3 4.5-3s4.5 1.34 4.5 3V13.5h-9v-1z" fill="currentColor"/>
+                    </svg>
+                </span>
+                Clients avec disponible retirable
+            </h2>
             {% if top_clients %}
-                <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+                <div class="soft-table overflow-x-auto rounded-[1.5rem]">
                     <table class="w-full min-w-[720px] border-collapse">
                         <thead class="bg-slate-50/90">
                             <tr>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Client</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Code</th>
-                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Credit</th>
+                                <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Crédit</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Retraits</th>
                                 <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Disponible</th>
                             </tr>
@@ -39,40 +47,75 @@
                                     <td class="px-4 py-4 text-slate-600">{{ row.client_code }}</td>
                                     <td class="px-4 py-4 text-slate-600">{{ row.total_credit_client }} FCFA</td>
                                     <td class="px-4 py-4 text-slate-600">{{ row.total_retraits }} FCFA</td>
-                                    <td class="px-4 py-4"><span class="inline-flex rounded-full bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">{{ row.montant_retirable }} FCFA</span></td>
+                                    <td class="px-4 py-4"><span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700 shadow-sm">{{ row.montant_retirable }} FCFA</span></td>
                                 </tr>
                             {% endfor %}
                         </tbody>
                     </table>
                 </div>
             {% else %}
-                {% include "includes/empty_state.html" with title="Aucun disponible calcule" description="Les vues de reporting sont pretes, mais aucun mouvement de credit client n'a encore ete enregistre." %}
+                {% include "includes/empty_state.html" with title="Aucun disponible calculé" description="Aucun crédit client n'a encore été enregistré." %}
             {% endif %}
         </section>
 
-        <aside class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-            <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Acces rapides</h2>
+        <aside class="glass-panel rounded-[1.8rem] p-5">
+            <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+                <span class="section-title__icon">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 8h10M8 3v10" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                Accès rapides
+            </h2>
             <div class="grid gap-3">
-                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-emerald-300 hover:bg-white" href="{% url 'admin_agent_list' %}">
-                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Gerer les agents</div>
-                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Consulter la structure terrain et ouvrir un nouveau profil agent.</p>
+                <a class="action-tile rounded-[1.35rem] border border-slate-200/80 bg-gradient-to-r from-emerald-50/90 to-white px-4 py-4 transition hover:-translate-y-0.5 hover:border-emerald-300 hover:bg-white" href="{% url 'admin_agent_list' %}">
+                    <div class="mb-2 flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-emerald-600 text-white shadow-[0_14px_28px_rgba(16,185,129,0.22)]">
+                            <svg class="h-5 w-5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M5.5 7a2 2 0 100-4 2 2 0 000 4zm5 1a2 2 0 100-4 2 2 0 000 4zM2.5 12.5c0-1.1 1.34-2 3-2s3 .9 3 2V13.5h-6v-1zm6 0c0-1.1 1.34-2 3-2s3 .9 3 2V13.5h-6v-1z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <div class="font-semibold tracking-[-0.02em] text-slate-950">Gérer les agents</div>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Consulter la structure terrain, réinitialiser les accès et ouvrir un nouveau profil agent.</p>
                 </a>
-                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-emerald-300 hover:bg-white" href="{% url 'admin_client_list' %}">
-                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Superviser les clients</div>
-                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Verifier les details clients, leurs cycles et leur disponible retirable.</p>
+                <a class="action-tile rounded-[1.35rem] border border-slate-200/80 bg-gradient-to-r from-cyan-50/90 to-white px-4 py-4 transition hover:-translate-y-0.5 hover:border-cyan-300 hover:bg-white" href="{% url 'admin_client_list' %}">
+                    <div class="mb-2 flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-cyan-600 text-white shadow-[0_14px_28px_rgba(8,145,178,0.22)]">
+                            <svg class="h-5 w-5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M8 2.5a3 3 0 100 6 3 3 0 000-6zm-4.5 10c0-1.66 2.02-3 4.5-3s4.5 1.34 4.5 3V13.5h-9v-1z" fill="currentColor"/>
+                            </svg>
+                        </span>
+                        <div class="font-semibold tracking-[-0.02em] text-slate-950">Superviser les clients</div>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Vérifier les détails clients, leurs cycles et leur disponible retirable.</p>
                 </a>
-                <a class="rounded-[1.1rem] border border-slate-200/80 bg-slate-50/80 px-4 py-4 transition hover:border-emerald-300 hover:bg-white" href="{% url 'admin_mouvement_list' %}">
-                    <div class="font-semibold tracking-[-0.02em] text-slate-950">Historique financier</div>
-                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Auditer les mouvements, depots, retraits et ecritures de cloture.</p>
+                <a class="action-tile rounded-[1.35rem] border border-slate-200/80 bg-gradient-to-r from-amber-50/90 to-white px-4 py-4 transition hover:-translate-y-0.5 hover:border-amber-300 hover:bg-white" href="{% url 'admin_mouvement_list' %}">
+                    <div class="mb-2 flex items-center gap-3">
+                        <span class="flex h-11 w-11 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-[0_14px_28px_rgba(245,158,11,0.22)]">
+                            <svg class="h-5 w-5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                                <path d="M2.5 11.5l3-3 2 2 4-5 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                            </svg>
+                        </span>
+                        <div class="font-semibold tracking-[-0.02em] text-slate-950">Historique financier</div>
+                    </div>
+                    <p class="mt-1.5 text-sm leading-6 text-slate-600">Auditer les mouvements, dépôts, retraits et écritures de clôture.</p>
                 </a>
             </div>
         </aside>
     </div>
 
-    <section class="mt-4 rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <h2 class="mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">Derniers mouvements</h2>
+    <section class="glass-panel mt-4 rounded-[1.8rem] p-5">
+        <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+            <span class="section-title__icon">
+                <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M2.5 11.5l3-3 2 2 4-5 2 2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </span>
+            Derniers mouvements
+        </h2>
         {% if recent_mouvements %}
-            <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
+            <div class="soft-table overflow-x-auto rounded-[1.5rem]">
                 <table class="w-full min-w-[720px] border-collapse">
                     <thead class="bg-slate-50/90">
                         <tr>

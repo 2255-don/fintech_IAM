@@ -1,9 +1,16 @@
-<div class="mb-6 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+<div class="mb-7 flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
     <div>
         {% if eyebrow %}
-            <p class="mb-2 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-emerald-700">{{ eyebrow }}</p>
+            <div class="mb-3 inline-flex items-center gap-2 rounded-full border border-emerald-200/70 bg-emerald-50/85 px-3 py-1.5 text-[0.78rem] font-semibold uppercase tracking-[0.18em] text-emerald-700 shadow-sm">
+                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-emerald-600 text-white shadow-sm">
+                    <svg class="h-3.5 w-3.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 1.5l1.6 3.24 3.58.52-2.59 2.53.61 3.57L8 9.68 4.8 11.36l.61-3.57L2.82 5.26l3.58-.52L8 1.5z" fill="currentColor"/>
+                    </svg>
+                </span>
+                {{ eyebrow }}
+            </div>
         {% endif %}
-        <h1 class="text-4xl font-semibold tracking-[-0.05em] text-slate-950">{{ title }}</h1>
+        <h1 class="text-[2.65rem] font-semibold tracking-[-0.06em] text-slate-950 sm:text-5xl">{{ title }}</h1>
         {% if description %}
             <p class="mt-3 max-w-4xl text-lg leading-8 text-slate-600">{{ description }}</p>
         {% endif %}

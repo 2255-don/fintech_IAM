@@ -76,8 +76,31 @@ class InterfaceWorkflowTests(TestCase):
         created_client = Client.objects.get(telephone="72220000")
         self.assertRedirects(response, reverse("agent_client_detail", args=[created_client.id]))
         self.assertEqual(created_client.agent, self.agent)
-        self.assertContains(response, "Client cree avec succes.")
+        self.assertContains(response, "Client créé avec succès.")
         self.assertContains(response, "data-toast")
+
+    def test_agent_can_update_client_from_interface(self):
+        self.client.force_login(self.agent_user)
+
+        response = self.client.post(
+            reverse("agent_client_update", args=[self.client_record.id]),
+            {
+                "nom": "Diallo",
+                "prenom": "Mariam Awa",
+                "telephone": "73330000",
+                "genre": "F",
+                "date_naissance": "",
+                "email": "mariam.awa@example.com",
+                "adresse": "Sikasso",
+            },
+            follow=True,
+        )
+
+        self.client_record.refresh_from_db()
+        self.assertRedirects(response, reverse("agent_client_detail", args=[self.client_record.id]))
+        self.assertEqual(self.client_record.prenom, "Mariam Awa")
+        self.assertEqual(self.client_record.telephone, "73330000")
+        self.assertContains(response, "mises à jour")
 
     def test_agent_can_open_cycle_from_interface(self):
         self.client.force_login(self.agent_user)
@@ -150,6 +173,6 @@ class InterfaceWorkflowTests(TestCase):
         cycle_create = self.client.get(reverse("agent_cycle_create", args=[self.client_record.id]))
         depot_create = self.client.get(reverse("agent_depot_create", args=[self.cycle.id]))
 
-        self.assertContains(client_create, 'data-confirm-title="Creer ce client ?"')
+        self.assertContains(client_create, 'data-confirm-title="Créer ce client ?"')
         self.assertContains(cycle_create, 'data-confirm-title="Ouvrir ce cycle ?"')
         self.assertContains(depot_create, 'data-confirm-title="Confirmer le depot ?"')

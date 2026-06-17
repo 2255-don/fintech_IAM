@@ -1,7 +1,15 @@
-<article class="rounded-[1.45rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-    <p class="mb-2 text-sm text-slate-500">{{ label }}</p>
-    <p class="text-4xl font-semibold tracking-[-0.05em] text-slate-950">{{ value }}</p>
+<article class="relative overflow-hidden rounded-[1.55rem] border border-white/80 bg-[radial-gradient(circle_at_top_left,_rgba(16,185,129,0.16),_transparent_38%),radial-gradient(circle_at_bottom_right,_rgba(34,211,238,0.12),_transparent_34%),linear-gradient(180deg,rgba(255,255,255,0.98),rgba(248,250,252,0.94))] p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+    <div class="absolute right-0 top-0 h-24 w-24 rounded-full bg-white/45 blur-2xl"></div>
+    <div class="mb-3 flex items-center justify-between gap-3">
+        <p class="text-sm text-slate-500">{{ label }}</p>
+        <span class="flex h-10 w-10 items-center justify-center rounded-2xl bg-slate-950 text-white shadow-[0_10px_24px_rgba(15,23,42,0.18)]">
+            <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                <path d="M3 11.5V8.5M8 11.5V4.5M13 11.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </span>
+    </div>
+    <p class="relative text-4xl font-semibold tracking-[-0.05em] text-slate-950">{{ value }}</p>
     {% if note %}
-        <p class="mt-3 text-base leading-7 text-slate-600">{{ note }}</p>
+        <p class="relative mt-3 text-base leading-7 text-slate-600">{{ note }}</p>
     {% endif %}
 </article>

@@ -36,7 +36,7 @@ def admin_agent_list(request: HttpRequest) -> HttpResponse:
             )
             messages.success(
                 request,
-                f"Agent {agent.code} cree avec succes. Mot de passe initial : {AgentService.DEFAULT_PASSWORD}",
+                f"Agent {agent.code} créé avec succès. Mot de passe initial : {AgentService.DEFAULT_PASSWORD}",
             )
             return redirect("admin_agent_detail", agent_id=agent.id)
         modal_open = True
@@ -91,7 +91,7 @@ def admin_agent_update(request: HttpRequest, agent_id: int) -> HttpResponse:
                 "Agent modifie depuis l'interface admin",
                 extra={"agent_id": agent.id, "agent_code": agent.code, "updated_by": request.user.id},
             )
-            messages.success(request, f"Agent {agent.code} modifie avec succes.")
+            messages.success(request, f"Agent {agent.code} modifié avec succès.")
             return redirect("admin_agent_detail", agent_id=agent.id)
     else:
         form = AgentUpdateForm(
@@ -126,9 +126,9 @@ def admin_agent_toggle_status(request: HttpRequest, agent_id: int) -> HttpRespon
         extra={"agent_id": agent.id, "agent_code": agent.code, "updated_by": request.user.id, "actif": agent.actif},
     )
     if agent.actif:
-        messages.success(request, f"Agent {agent.code} debloque avec succes.")
+        messages.success(request, f"Agent {agent.code} débloqué avec succès.")
     else:
-        messages.success(request, f"Agent {agent.code} bloque avec succes.")
+        messages.success(request, f"Agent {agent.code} bloqué avec succès.")
     return redirect(request.POST.get("next") or "admin_agent_list")
 
 
@@ -141,8 +141,24 @@ def admin_agent_delete(request: HttpRequest, agent_id: int) -> HttpResponse:
         "Agent supprime logiquement depuis l'interface admin",
         extra={"agent_id": agent.id, "agent_code": agent.code, "deleted_by": request.user.id},
     )
-    messages.success(request, f"Agent {agent.code} supprime avec succes.")
+    messages.success(request, f"Agent {agent.code} supprimé avec succès.")
     return redirect(request.POST.get("next") or "admin_agent_list")
+
+
+@role_required(UserRole.ADMIN)
+@require_POST
+def admin_agent_reset_password(request: HttpRequest, agent_id: int) -> HttpResponse:
+    agent = get_object_or_404(Agent.objects.select_related("user"), id=agent_id, deleted_at__isnull=True)
+    AgentService.reset_password(agent, updated_by=request.user)
+    logger.info(
+        "Mot de passe agent reinitialise depuis l'interface admin",
+        extra={"agent_id": agent.id, "agent_code": agent.code, "updated_by": request.user.id},
+    )
+    messages.success(
+        request,
+        f"Le mot de passe de {agent.code} a été réinitialisé à {AgentService.DEFAULT_PASSWORD}.",
+    )
+    return redirect(request.POST.get("next") or "admin_agent_detail")
 
 
 @role_required(UserRole.ADMIN)

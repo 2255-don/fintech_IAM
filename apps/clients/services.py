@@ -37,3 +37,39 @@ class ClientService:
             updated_by=created_by,
         )
         return client
+
+    @staticmethod
+    def update_client(
+        client: Client,
+        *,
+        nom: str,
+        telephone: str,
+        prenom: str = "",
+        genre: str = "",
+        date_naissance=None,
+        email: str = "",
+        adresse: str = "",
+        updated_by=None,
+    ) -> Client:
+        client.nom = nom
+        client.prenom = prenom
+        client.genre = genre
+        client.date_naissance = date_naissance
+        client.telephone = telephone
+        client.email = email
+        client.adresse = adresse
+        client.updated_by = updated_by
+        client.save(
+            update_fields=[
+                "nom",
+                "prenom",
+                "genre",
+                "date_naissance",
+                "telephone",
+                "email",
+                "adresse",
+                "updated_by",
+                "updated_at",
+            ]
+        )
+        return client

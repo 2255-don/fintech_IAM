@@ -1,11 +1,11 @@
 {% extends "layouts/agent_layout.html" %}
 
-{% block title %}Fintech-IAM | Retrait special{% endblock %}
+{% block title %}Fintech-IAM | Retrait spécial{% endblock %}
 
 {% block workspace %}
-    {% include "includes/page_header.html" with eyebrow="Retrait special" title="Retrait d'urgence" description="Cloturez un cycle par anticipation lorsque le client souhaite sortir avant la fin, avec penalite d'une mise et ventilation 50/50." %}
+    {% include "includes/page_header.html" with eyebrow="Retrait spécial" title="Retrait d'urgence" description="Clôturez un cycle par anticipation lorsque le client souhaite sortir avant la fin, avec pénalité d'une mise et ventilation 50/50." %}
     <section class="mb-6 rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Cadre du retrait special</h2>
+        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Cadre du retrait spécial</h2>
         <div class="mt-5 grid gap-5 lg:grid-cols-2">
             <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                 <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Cycle</p>
@@ -16,20 +16,20 @@
                 <p class="mt-2 text-base font-medium text-slate-900">{{ client.code }} - {{ client.nom }} {{ client.prenom }}</p>
             </div>
             <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Montant maximal a remettre</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Montant maximal à remettre</p>
                 <p class="mt-2 text-base font-medium text-slate-900">{{ emergency_summary.montant_maximal }} FCFA</p>
-                <p class="mt-1 text-sm leading-6 text-slate-600">Equivalent au total collecte moins une mise de penalite.</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">Équivalent au total collecté moins une mise de pénalité.</p>
             </div>
             <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
-                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Penalite automatique</p>
+                <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Pénalité automatique</p>
                 <p class="mt-2 text-base font-medium text-slate-900">{{ emergency_summary.penalite }} FCFA</p>
-                <p class="mt-1 text-sm leading-6 text-slate-600">Partagee a 50/50 entre agent et plateforme.</p>
+                <p class="mt-1 text-sm leading-6 text-slate-600">Partagée à 50/50 entre agent et plateforme.</p>
             </div>
         </div>
     </section>
 
     <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <form method="post" class="grid gap-5" data-confirm-title="Confirmer le retrait special ?" data-confirm-text="Le cycle sera cloture par anticipation. Une penalite d'une mise sera appliquee et partagee a 50/50 entre agent et plateforme." data-confirm-confirm="Valider le retrait special" data-confirm-icon="warning">
+        <form method="post" class="grid gap-5" data-confirm-title="Confirmer le retrait spécial ?" data-confirm-text="Le cycle sera clôturé par anticipation. Une pénalité d'une mise sera appliquée et partagée à 50/50 entre agent et plateforme." data-confirm-confirm="Valider le retrait spécial" data-confirm-icon="warning">
             {% csrf_token %}
             {% if form.non_field_errors %}
                 <div class="rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3 text-sm text-rose-700">{{ form.non_field_errors }}</div>
@@ -44,10 +44,10 @@
                 </div>
             {% endfor %}
             <div class="rounded-[1.25rem] border border-amber-200 bg-amber-50/80 px-4 py-4 text-sm leading-6 text-amber-900">
-                Regle appliquee : le montant saisi ne doit pas depasser {{ emergency_summary.montant_maximal }} FCFA. Le client recoit le montant saisi, la penalite de {{ emergency_summary.penalite }} FCFA est prelevee sur le cycle, puis le cycle passe en cloture anticipee.
+                Règle appliquée : le montant saisi ne doit pas dépasser {{ emergency_summary.montant_maximal }} FCFA. Le client reçoit le montant saisi, la pénalité de {{ emergency_summary.penalite }} FCFA est prélevée sur le cycle, puis le cycle passe en clôture anticipée.
             </div>
             <div class="flex flex-wrap gap-3 pt-2">
-                <button class="inline-flex items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-amber-600" type="submit">Valider le retrait special</button>
+                <button class="inline-flex items-center rounded-full bg-slate-950 px-5 py-3 text-sm font-semibold text-white shadow-[0_14px_28px_rgba(15,23,42,0.18)] transition hover:bg-amber-600" type="submit">Valider le retrait spécial</button>
                 <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-emerald-300 hover:text-emerald-700" href="{% url 'agent_cycle_detail' cycle.id %}">Retour au cycle</a>
             </div>
         </form>

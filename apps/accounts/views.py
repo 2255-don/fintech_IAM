@@ -44,6 +44,8 @@ def admin_dashboard(request):
         .order_by("-date_mouvement")[:6]
     )
     commission_rows = ReportingService.list_agent_commissions()
+    total_commissions_agent = sum(row["total_commissions"] for row in commission_rows)
+    total_commissions_plateforme = sum(row["total_commissions_plateforme"] for row in commission_rows)
     return render(
         request,
         "accounts/admin_dashboard.html",
@@ -58,7 +60,8 @@ def admin_dashboard(request):
                 deleted_at__isnull=True,
                 statut=CycleStatus.CLOTURE,
             ).count(),
-            "total_commissions": sum(row["total_commissions"] for row in commission_rows),
+            "total_commissions_agent": total_commissions_agent,
+            "total_commissions_plateforme": total_commissions_plateforme,
             "total_retraits": Retrait.objects.filter(deleted_at__isnull=True).aggregate(total=Sum("montant"))["total"] or 0,
             "recent_mouvements": recent_mouvements,
             "top_clients": ReportingService.list_client_retirable_rows(limit=5),

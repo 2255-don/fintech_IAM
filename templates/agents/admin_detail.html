@@ -1,15 +1,20 @@
 {% extends "layouts/admin_layout.html" %}
 
-{% block title %}Fintech-IAM | Detail agent{% endblock %}
+{% block title %}Fintech-IAM | Détail agent{% endblock %}
 
 {% block workspace %}
-    {% include "includes/page_header.html" with eyebrow="Fiche agent" title=agent.code description="Retrouvez le profil agent, son portefeuille recent, ses commissions et ses retraits dans une vue de supervision dediee." %}
+    {% include "includes/page_header.html" with eyebrow="Fiche agent" title=agent.code description="Retrouvez le profil agent, son portefeuille récent, ses commissions et ses retraits dans une vue de supervision dédiée." %}
     <div class="mb-6 flex flex-wrap justify-end gap-3">
         <a class="inline-flex items-center rounded-full border border-slate-200 bg-white px-5 py-3 text-sm font-semibold text-slate-700 transition hover:border-cyan-300 hover:text-cyan-700" href="{% url 'admin_agent_update' agent.id %}">Modifier</a>
+        <form method="post" action="{% url 'admin_agent_reset_password' agent.id %}" data-confirm-title="Réinitialiser le mot de passe ?" data-confirm-text="Le mot de passe sera remis à password! et l'agent sera réactivé." data-confirm-confirm="Réinitialiser" data-confirm-icon="warning">
+            {% csrf_token %}
+            <input type="hidden" name="next" value="{% url 'admin_agent_detail' agent.id %}">
+            <button class="inline-flex items-center rounded-full border border-cyan-200 bg-cyan-50 px-5 py-3 text-sm font-semibold text-cyan-700 transition hover:bg-cyan-100" type="submit">Réinitialiser le mot de passe</button>
+        </form>
         <form method="post" action="{% url 'admin_agent_toggle_status' agent.id %}" data-confirm-title="Confirmer cette action ?" data-confirm-text="Le statut de l'agent sera mis a jour." data-confirm-confirm="Valider" data-confirm-icon="warning">
             {% csrf_token %}
             <input type="hidden" name="next" value="{% url 'admin_agent_detail' agent.id %}">
-            <button class="inline-flex items-center rounded-full px-5 py-3 text-sm font-semibold transition {% if agent.actif %}border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100{% else %}border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100{% endif %}" type="submit">{% if agent.actif %}Bloquer{% else %}Debloquer{% endif %}</button>
+            <button class="inline-flex items-center rounded-full px-5 py-3 text-sm font-semibold transition {% if agent.actif %}border border-amber-200 bg-amber-50 text-amber-700 hover:bg-amber-100{% else %}border border-emerald-200 bg-emerald-50 text-emerald-700 hover:bg-emerald-100{% endif %}" type="submit">{% if agent.actif %}Bloquer{% else %}Débloquer{% endif %}</button>
         </form>
         <form method="post" action="{% url 'admin_agent_delete' agent.id %}" data-confirm-title="Supprimer cet agent ?" data-confirm-text="L'agent sera supprime logiquement et ne sera plus visible dans la liste." data-confirm-confirm="Supprimer" data-confirm-icon="warning">
             {% csrf_token %}
@@ -18,15 +23,22 @@
         </form>
     </div>
     <div class="grid gap-6 xl:grid-cols-[minmax(0,1.45fr)_minmax(320px,0.85fr)]">
-        <section class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-            <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Informations principales</h2>
+        <section class="glass-panel rounded-[1.9rem] p-6">
+            <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+                <span class="section-title__icon">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M8 2.5a3 3 0 100 6 3 3 0 000-6zm-4.5 10c0-1.66 2.02-3 4.5-3s4.5 1.34 4.5 3V13.5h-9v-1z" fill="currentColor"/>
+                    </svg>
+                </span>
+                Informations principales
+            </h2>
             <div class="mt-5 grid gap-5 sm:grid-cols-2">
                 <div>
                     <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Nom complet</p>
                     <p class="mt-2 text-base font-medium text-slate-900">{{ agent.user.get_full_name|default:agent.user.username }}</p>
                 </div>
                 <div>
-                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Telephone</p>
+                    <p class="text-xs font-semibold uppercase tracking-[0.18em] text-slate-400">Téléphone</p>
                     <p class="mt-2 text-base font-medium text-slate-900">{{ agent.telephone|default:"-" }}</p>
                 </div>
                 <div>
@@ -39,29 +51,43 @@
                 </div>
             </div>
         </section>
-        <aside class="rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-            <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Synthese</h2>
+        <aside class="glass-panel rounded-[1.9rem] p-6">
+            <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+                <span class="section-title__icon">
+                    <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                        <path d="M3 11.5V8.5M8 11.5V4.5M13 11.5V6.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+                    </svg>
+                </span>
+                Synthèse
+            </h2>
             <div class="mt-5 space-y-3">
                 <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                     <div class="flex items-center justify-between gap-3">
                         <div class="text-lg font-semibold text-slate-950">{{ agent.client_count }} clients</div>
-                        <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if agent.actif %}bg-emerald-50 text-emerald-700{% else %}bg-amber-50 text-amber-700{% endif %}">{% if agent.actif %}Actif{% else %}Bloque{% endif %}</span>
+                        <span class="inline-flex rounded-full px-3 py-1 text-xs font-semibold uppercase tracking-[0.14em] {% if agent.actif %}bg-emerald-50 text-emerald-700{% else %}bg-amber-50 text-amber-700{% endif %}">{% if agent.actif %}Actif{% else %}Bloqué{% endif %}</span>
                     </div>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">Portefeuille actuellement rattache a cet agent.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Portefeuille actuellement rattaché à cet agent.</p>
                 </div>
                 <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                     <div class="text-lg font-semibold text-slate-950">{{ commission_summary.total_commissions }} FCFA</div>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">Commissions agent issues des clotures de cycles.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Commissions agent issues des clôtures de cycles.</p>
                 </div>
                 <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                     <div class="text-lg font-semibold text-slate-950">{{ total_retraits }} FCFA</div>
-                    <p class="mt-1 text-sm leading-6 text-slate-600">Montant des retraits historiquement enregistres.</p>
+                    <p class="mt-1 text-sm leading-6 text-slate-600">Montant des retraits historiquement enregistrés.</p>
                 </div>
             </div>
         </aside>
     </div>
-    <section class="mt-6 rounded-[1.7rem] border border-white/70 bg-white/88 p-6 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
-        <h2 class="text-xl font-semibold tracking-[-0.03em] text-slate-950">Derniers clients rattaches</h2>
+    <section class="glass-panel mt-6 rounded-[1.9rem] p-6">
+        <h2 class="section-title mb-4 text-xl font-semibold tracking-[-0.03em] text-slate-950">
+            <span class="section-title__icon">
+                <svg class="h-4.5 w-4.5" viewBox="0 0 16 16" fill="none" aria-hidden="true">
+                    <path d="M8 2.5a3 3 0 100 6 3 3 0 000-6zm-4.5 10c0-1.66 2.02-3 4.5-3s4.5 1.34 4.5 3V13.5h-9v-1z" fill="currentColor"/>
+                </svg>
+            </span>
+            Derniers clients rattachés
+        </h2>
         {% if recent_clients %}
             <div class="mt-5 space-y-3">
                 {% for client in recent_clients %}
@@ -72,7 +98,7 @@
                 {% endfor %}
             </div>
         {% else %}
-            {% include "includes/empty_state.html" with title="Aucun client rattache" description="Cet agent n'a pas encore de portefeuille actif." %}
+            {% include "includes/empty_state.html" with title="Aucun client rattaché" description="Cet agent n'a pas encore de portefeuille actif." %}
         {% endif %}
     </section>
 {% endblock %}

@@ -3,19 +3,22 @@
 {% block title %}Fintech-IAM | Commissions{% endblock %}
 
 {% block workspace %}
-    {% include "includes/page_header.html" with eyebrow="Reporting SQL" title="Commissions agents" description="Vue de synthese des commissions agent calculees depuis les mouvements COM_AGENT." %}
+    {% include "includes/page_header.html" with eyebrow="Suivi des commissions" title="Commissions" description="Consultez la répartition des commissions entre les agents et la plateforme." %}
     <section class="mb-6 grid gap-4 md:grid-cols-2 xl:grid-cols-4">
-        {% include "includes/stat_card.html" with label="Total commissions" value=total_commissions note="Somme de la vue SQL v_agent_commissions" %}
+        {% include "includes/stat_card.html" with label="Part agents" value=total_commissions_agent note="Total reversé aux agents" %}
+        {% include "includes/stat_card.html" with label="Part plateforme" value=total_commissions_plateforme note="Total conservé par la plateforme" %}
     </section>
-    <section class="rounded-[1.5rem] border border-white/70 bg-white/88 p-5 shadow-[0_20px_45px_rgba(15,23,42,0.08)] backdrop-blur">
+    <section class="glass-panel rounded-[1.8rem] p-5">
         {% if commission_rows %}
-            <div class="overflow-x-auto rounded-[1.25rem] border border-slate-200/80">
-                <table class="w-full min-w-[720px] border-collapse">
+            <div class="soft-table overflow-x-auto rounded-[1.5rem]">
+                <table class="w-full min-w-[980px] border-collapse">
                     <thead class="bg-slate-50/90">
                         <tr>
                             <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Agent</th>
-                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Nombre de commissions</th>
-                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Total</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Nombre de commissions agent</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Part agent</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Nombre de commissions plateforme</th>
+                            <th class="px-4 py-4 text-left text-xs uppercase tracking-[0.14em] text-slate-500">Part plateforme</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -23,14 +26,16 @@
                             <tr class="border-t border-slate-200/70">
                                 <td class="px-4 py-4 text-slate-700">{{ row.agent_code }}</td>
                                 <td class="px-4 py-4 text-slate-700">{{ row.nb_commissions }}</td>
-                                <td class="px-4 py-4 font-medium text-slate-950">{{ row.total_commissions }} FCFA</td>
+                                <td class="px-4 py-4 font-medium text-slate-950"><span class="inline-flex rounded-full border border-emerald-200 bg-emerald-50 px-3 py-1 text-sm font-semibold text-emerald-700">{{ row.total_commissions }} FCFA</span></td>
+                                <td class="px-4 py-4 text-slate-700">{{ row.nb_commissions_plateforme }}</td>
+                                <td class="px-4 py-4 font-medium text-slate-950"><span class="inline-flex rounded-full border border-cyan-200 bg-cyan-50 px-3 py-1 text-sm font-semibold text-cyan-700">{{ row.total_commissions_plateforme }} FCFA</span></td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
         {% else %}
-            {% include "includes/empty_state.html" with title="Aucune commission" description="Les clotures de cycles alimenteront cette page automatiquement." %}
+            {% include "includes/empty_state.html" with title="Aucune commission" description="Les clôtures de cycles alimenteront cette page automatiquement." %}
         {% endif %}
     </section>
 {% endblock %}
