@@ -173,7 +173,8 @@
                 {% for mouvement in recent_mouvements %}
                     <div class="rounded-[1.25rem] border border-slate-200 bg-slate-50/90 px-4 py-4">
                         <div class="text-base font-semibold text-slate-950">{{ mouvement.code }} • {{ mouvement.type }} • {{ mouvement.montant }} FCFA</div>
-                            <p class="mt-1 text-sm leading-6 text-slate-600">{% if mouvement.cycle %}Cycle {{ mouvement.cycle.code }}{% else %}Sans cycle spécifique{% endif %}{% if mouvement.reference_operation %} • Référence {{ mouvement.reference_operation }}{% endif %}</p>
+                        <p class="mt-1 text-sm leading-6 text-slate-600">{% if mouvement.cycle %}Cycle {{ mouvement.cycle.code }}{% else %}Sans cycle spécifique{% endif %}{% if mouvement.reference_operation %} • Référence {{ mouvement.reference_operation }}{% endif %}</p>
+                        <p class="mt-2 text-xs uppercase tracking-[0.14em] text-slate-400">{{ mouvement.date_mouvement|date:"d/m/Y H:i" }}</p>
                     </div>
                 {% endfor %}
             </div>
